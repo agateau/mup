@@ -29,10 +29,13 @@ class Window(QWidget):
     def _setupView(self):
         self._view = QWebView(self)
         page = WebPage()
+        page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
+        page.linkClicked.connect(self._openUrl)
         self._view.setPage(page)
         page.mainFrame().addToJavaScriptWindowObject("qtWindow", self)
         url = QUrl("file://" + os.path.dirname(__file__) + "/view.html")
         self._view.setUrl(url)
+
 
     def _readText(self):
         txt = open(self._filename).read()
@@ -49,3 +52,6 @@ class Window(QWidget):
     def text(self):
         return self._text
 
+
+    def _openUrl(self, url):
+        QDesktopServices.openUrl(url)
