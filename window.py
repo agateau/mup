@@ -14,11 +14,7 @@ class Window(QWidget):
         self._filename = filename
         self.setWindowTitle(self._filename + " - mdview")
 
-        self._view = QWebView(self)
-        self._view.setPage(WebPage())
-        self._view.page().mainFrame().addToJavaScriptWindowObject("qtWindow", self)
-        url = QUrl("file://" + os.path.dirname(__file__) + "/view.html")
-        self._view.setUrl(url)
+        self._setupView()
 
         layout = QHBoxLayout(self)
         layout.setMargin(0)
@@ -29,6 +25,14 @@ class Window(QWidget):
 
         cut = QShortcut(Qt.Key_F5, self)
         cut.activated.connect(self._readText)
+
+    def _setupView(self):
+        self._view = QWebView(self)
+        page = WebPage()
+        self._view.setPage(page)
+        page.mainFrame().addToJavaScriptWindowObject("qtWindow", self)
+        url = QUrl("file://" + os.path.dirname(__file__) + "/view.html")
+        self._view.setUrl(url)
 
     def _readText(self):
         txt = open(self._filename).read()
