@@ -9,7 +9,7 @@ class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
-        self._filename = ""
+        self.filename = ""
 
         self.setupToolBar()
         self.setupView()
@@ -31,7 +31,7 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
     def load(self, filename):
-        self._filename = filename
+        self.filename = filename
         self.setWindowTitle(filename + " - mdview")
         self.view.load(filename)
 
@@ -41,6 +41,7 @@ class Window(QMainWindow):
     def edit(self):
         # FIXME: Use configurable editor
         subprocess.call(["gvim", self._filename])
+        subprocess.call([editor, self.filename])
 
     def handleInternalUrl(self, url):
         if url.path() == "create":
