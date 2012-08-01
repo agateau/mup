@@ -9,7 +9,8 @@ class WebPage(QWebPage):
         print "JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg)
 
 class View(QWidget):
-    mdUrlClicked = pyqtSignal(QString)
+    internalUrlClicked = pyqtSignal(QUrl)
+    loadRequested = pyqtSignal(QString)
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -61,7 +62,9 @@ class View(QWidget):
 
 
     def _openUrl(self, url):
+        if url.scheme() == "internal":
+            self.internalUrlClicked.emit(url)
         if url.isLocalFile() and url.path().endsWith(".md"):
-            self.mdUrlClicked.emit(url.path())
+            self.loadRequested.emit(url.path())
         else:
             QDesktopServices.openUrl(url)
