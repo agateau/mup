@@ -9,11 +9,8 @@ class WebPage(QWebPage):
         print "JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg)
 
 class Window(QWidget):
-    def __init__(self, filename):
+    def __init__(self):
         QWidget.__init__(self)
-        self._filename = filename
-        self.setWindowTitle(self._filename + " - mdview")
-
         self._setupView()
 
         layout = QHBoxLayout(self)
@@ -21,10 +18,9 @@ class Window(QWidget):
         layout.addWidget(self._view)
 
         self._text = QString()
-        self._readText()
 
         cut = QShortcut(Qt.Key_F5, self)
-        cut.activated.connect(self._readText)
+        cut.activated.connect(self._reload)
 
     def _setupView(self):
         self._view = QWebView(self)
@@ -36,8 +32,12 @@ class Window(QWidget):
         url = QUrl("file://" + os.path.dirname(__file__) + "/view.html")
         self._view.setUrl(url)
 
+    def load(self, filename):
+        self._filename = filename
+        self.setWindowTitle(self._filename + " - mdview")
+        self._reload()
 
-    def _readText(self):
+    def _reload(self):
         txt = open(self._filename).read()
         self.setText(QString(txt))
 
@@ -54,4 +54,7 @@ class Window(QWidget):
 
 
     def _openUrl(self, url):
-        QDesktopServices.openUrl(url)
+        if url.isLocalFile() and url.path().endsWith(".md"):
+            self.load(url.path())
+        else:
+            QDesktopServices.openUrl(url)

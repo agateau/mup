@@ -15,7 +15,8 @@ def main():
         print "USAGE: mdview <file.md>"
         return 1
 
-    window = Window(sys.argv[1])
+    window = Window()
+    window.load(sys.argv[1])
 
     window.show()
     app.exec_()

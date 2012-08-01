@@ -8,3 +8,7 @@ Markdown is a simple markup language. See http://daringfireball.net/markdown/
 # Requirements
 
 - PyQt4
+
+# Other pages
+
+- [Another Page](subpage1.md)
