@@ -15,40 +15,41 @@ class View(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.dataDir = os.path.dirname(__file__)
+        self._text = QString()
+        self.filename = QString()
 
-        self._setupView()
+        self.setupView()
 
         layout = QHBoxLayout(self)
         layout.setMargin(0)
-        layout.addWidget(self._view)
-
-        self._text = QString()
+        layout.addWidget(self.view)
 
         cut = QShortcut(Qt.Key_F5, self)
         cut.activated.connect(self._reload)
 
-    def _setupView(self):
-        self._view = QWebView(self)
+    def setupView(self):
+        self.view = QWebView(self)
         page = WebPage()
         page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         page.linkClicked.connect(self._openUrl)
-        self._view.setPage(page)
+        self.view.setPage(page)
         page.mainFrame().addToJavaScriptWindowObject("qtWindow", self)
         url = QUrl("file://" + self.dataDir + "/view.html")
-        self._view.setUrl(url)
+        self.view.setUrl(url)
 
     def load(self, filename):
-        self._filename = filename
+        self.filename = filename
         self._reload()
 
     def _reload(self):
-        if os.path.exists(self._filename):
-            filename = self._filename
+        if os.path.exists(self.filename):
+            filename = self.filename
         else:
             filename = os.path.join(self.dataDir, "placeholder.md")
         txt = open(filename).read()
         self.setText(QString(txt))
 
+    # Definition of "text" property, used on the JS side
     textChanged = pyqtSignal(QString)
 
     def setText(self, value):
@@ -59,7 +60,7 @@ class View(QWidget):
     @pyqtProperty(QString, fset=setText, notify=textChanged)
     def text(self):
         return self._text
-
+    # /Definition
 
     def _openUrl(self, url):
         if url.scheme() == "internal":
