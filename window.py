@@ -1,14 +1,18 @@
+import os
 import subprocess
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from view import View
+import config
 
 class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
+        self.dataDir = os.path.dirname(__file__)
+        self.config = config.load(self.dataDir)
         self.filename = ""
 
         self.setupToolBar()
@@ -39,8 +43,7 @@ class Window(QMainWindow):
         self.view.reload()
 
     def edit(self):
-        # FIXME: Use configurable editor
-        subprocess.call(["gvim", self._filename])
+        editor = self.config.get("general", "editor")
         subprocess.call([editor, self.filename])
 
     def handleInternalUrl(self, url):
