@@ -30,7 +30,7 @@ class Window(QMainWindow):
         action.triggered.connect(self.edit)
 
     def setupView(self):
-        self.view = View()
+        self.view = View(self.dataDir)
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 

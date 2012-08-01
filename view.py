@@ -12,9 +12,9 @@ class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)
     loadRequested = pyqtSignal(QString)
 
-    def __init__(self, parent=None):
+    def __init__(self, dataDir, parent=None):
         QWidget.__init__(self, parent)
-        self.dataDir = os.path.dirname(__file__)
+        self.dataDir = dataDir
         self._text = QString()
         self.filename = QString()
 
