@@ -11,6 +11,8 @@ class WebPage(QWebPage):
 class Window(QWidget):
     def __init__(self):
         QWidget.__init__(self)
+        self.dataDir = os.path.dirname(__file__)
+
         self._setupView()
 
         layout = QHBoxLayout(self)
@@ -29,7 +31,7 @@ class Window(QWidget):
         page.linkClicked.connect(self._openUrl)
         self._view.setPage(page)
         page.mainFrame().addToJavaScriptWindowObject("qtWindow", self)
-        url = QUrl("file://" + os.path.dirname(__file__) + "/view.html")
+        url = QUrl("file://" + self.dataDir + "/view.html")
         self._view.setUrl(url)
 
     def load(self, filename):
@@ -38,7 +40,11 @@ class Window(QWidget):
         self._reload()
 
     def _reload(self):
-        txt = open(self._filename).read()
+        if os.path.exists(self._filename):
+            filename = self._filename
+        else:
+            filename = os.path.join(self.dataDir, "placeholder.md")
+        txt = open(filename).read()
         self.setText(QString(txt))
 
     textChanged = pyqtSignal(QString)

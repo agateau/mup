@@ -11,4 +11,5 @@ Markdown is a simple markup language. See http://daringfireball.net/markdown/
 
 # Other pages
 
-- [Another Page](subpage1.md)
+- [Another page](subpage1.md)
+- [A page which does not exist](not_there.md)
