@@ -17,6 +17,11 @@ class Window(QMainWindow):
 
     def setupToolBar(self):
         toolBar = self.addToolBar(self.tr("Main"))
+
+        action = toolBar.addAction(self.tr("Reload"))
+        action.setShortcut(Qt.Key_F5)
+        action.triggered.connect(self.reload)
+
         action = toolBar.addAction(self.tr("Edit"))
         action.triggered.connect(self.edit)
 
@@ -29,6 +34,9 @@ class Window(QMainWindow):
         self._filename = filename
         self.setWindowTitle(filename + " - mdview")
         self.view.load(filename)
+
+    def reload(self):
+        self.view.reload()
 
     def edit(self):
         # FIXME: Use configurable editor

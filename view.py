@@ -24,9 +24,6 @@ class View(QWidget):
         layout.setMargin(0)
         layout.addWidget(self.view)
 
-        cut = QShortcut(Qt.Key_F5, self)
-        cut.activated.connect(self._reload)
-
     def setupView(self):
         self.view = QWebView(self)
         page = WebPage()
@@ -39,9 +36,9 @@ class View(QWidget):
 
     def load(self, filename):
         self.filename = filename
-        self._reload()
+        self.reload()
 
-    def _reload(self):
+    def reload(self):
         if os.path.exists(self.filename):
             filename = self.filename
         else:
