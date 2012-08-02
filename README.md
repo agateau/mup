@@ -1,9 +1,7 @@
 # What is it?
 
-Mdview is a markdown viewer and browser. You can use it to view markdown files
-and create lightweight wiki-like structures.
-
-Markdown is a simple markup language. See http://daringfireball.net/markdown/
+Mdview is a markdown and rst viewer and browser. You can use it to view
+markdown or rst files and create lightweight wiki-like structures.
 
 # Usage
 
@@ -33,7 +31,7 @@ you will have to write a wrapper shell script.
 - PyQt4
 - pyinotify
 
-# Other pages
+Optional, but you want at least one of those:
 
-- [Another page](subpage1.md)
-- [A page which does not exist](not_there.md)
+- markdown
+- docutils
