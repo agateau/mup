@@ -18,6 +18,7 @@ class View(QWidget):
         QWidget.__init__(self, parent)
         self.dataDir = dataDir
         self.filename = QString()
+        self.template = open(os.path.join(self.dataDir, "template.html")).read()
 
         self.setupView()
 
@@ -42,7 +43,7 @@ class View(QWidget):
             filename = os.path.join(self.dataDir, "placeholder.md")
         txt = open(filename).read()
 
-        html = markdown.markdown(txt)
+        html = self.template.replace("%content%", markdown.markdown(txt))
         baseUrl = QUrl(os.path.dirname(filename) + "/")
         self.view.setHtml(html, baseUrl)
 
