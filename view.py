@@ -17,7 +17,6 @@ class View(QWidget):
     def __init__(self, dataDir, parent=None):
         QWidget.__init__(self, parent)
         self.dataDir = dataDir
-        self._text = QString()
         self.filename = QString()
 
         self.setupView()
