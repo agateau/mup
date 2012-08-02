@@ -14,7 +14,7 @@ class Window(QMainWindow):
 
         self.dataDir = os.path.dirname(__file__)
         self.config = config.load(self.dataDir)
-        self.filename = ""
+        self.filename = QString()
         self.watcher = Watcher(self)
         self.watcher.changed.connect(self.reload)
 
@@ -42,10 +42,10 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
     def load(self, filename):
-        self.filename = filename
-        self.watcher.setFilename(filename)
-        self.setWindowTitle(filename + " - mdview")
-        self.view.load(filename)
+        self.filename = QString(os.path.abspath(unicode(filename)))
+        self.watcher.setFilename(self.filename)
+        self.setWindowTitle(self.filename + " - mdview")
+        self.view.load(self.filename)
 
     def reload(self):
         self.view.reload()
