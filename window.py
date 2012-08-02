@@ -4,8 +4,9 @@ import subprocess
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from view import View
 import config
+from view import View
+from watcher import Watcher
 
 class Window(QMainWindow):
     def __init__(self):
@@ -14,10 +15,16 @@ class Window(QMainWindow):
         self.dataDir = os.path.dirname(__file__)
         self.config = config.load(self.dataDir)
         self.filename = ""
+        self.watcher = Watcher(self)
+        self.watcher.changed.connect(self.reload)
 
         self.setupToolBar()
         self.setupView()
         self.setCentralWidget(self.view)
+
+    def closeEvent(self, event):
+        self.watcher.stop()
+        QMainWindow.closeEvent(self, event)
 
     def setupToolBar(self):
         toolBar = self.addToolBar(self.tr("Main"))
@@ -36,6 +43,7 @@ class Window(QMainWindow):
 
     def load(self, filename):
         self.filename = filename
+        self.watcher.setFilename(filename)
         self.setWindowTitle(filename + " - mdview")
         self.view.load(filename)
 

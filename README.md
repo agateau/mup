@@ -31,6 +31,7 @@ you will have to write a wrapper shell script.
 # Requirements
 
 - PyQt4
+- pyinotify
 
 # Other pages
 
