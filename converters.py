@@ -39,7 +39,7 @@ class HtmlConverter(object):
     MATCHES = ["*.html", "*.htm"]
 
     def convert(self, src):
-        return src
+        return unicode(src, "utf-8")
 
 def _init():
     lst = []
