@@ -18,7 +18,6 @@ class View(QWidget):
         QWidget.__init__(self, parent)
         self.dataDir = dataDir
         self.filename = QString()
-        self.template = open(os.path.join(self.dataDir, "template.html")).read()
 
         self.setupView()
 
