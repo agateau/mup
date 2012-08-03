@@ -32,6 +32,15 @@ class RstConverter(object):
         return docutils.core.publish_string(txt, writer_name="html")
 
 
+class HtmlConverter(object):
+    """
+    A dumb converter which just passes content unaltered
+    """
+    MATCHES = ["*.html", "*.htm"]
+
+    def convert(self, src):
+        return src
+
 def _init():
     lst = []
 
@@ -41,6 +50,7 @@ def _init():
     if HAS_DOCUTILS:
         lst.append(RstConverter())
 
+    lst.append(HtmlConverter())
     return lst
 
 _converters = _init()
