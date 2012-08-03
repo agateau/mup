@@ -21,6 +21,8 @@ class View(QWidget):
 
         self.setupView()
 
+        self.setupLinkLabel()
+
         layout = QHBoxLayout(self)
         layout.setMargin(0)
         layout.addWidget(self.view)
@@ -30,8 +32,24 @@ class View(QWidget):
         page = WebPage()
         page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         page.linkClicked.connect(self._openUrl)
-        page.linkHovered.connect(self.showToolTip)
+        page.linkHovered.connect(self.showHoveredLink)
         self.view.setPage(page)
+
+    def setupLinkLabel(self):
+        self.linkLabel = QLabel(self.view)
+        self.linkLabel.setStyleSheet("""
+        background-color: #abc;
+        color: #123;
+        padding: 3px;
+        border-bottom-right-radius: 3px;
+        border-right: 1px solid #bce;
+        border-bottom: 1px solid #bce;
+        """)
+        self.linkLabel.hide()
+        self.linkLabelHideTimer = QTimer(self)
+        self.linkLabelHideTimer.setSingleShot(True)
+        self.linkLabelHideTimer.setInterval(250)
+        self.linkLabelHideTimer.timeout.connect(self.linkLabel.hide)
 
     def load(self, filename):
         self.filename = filename
@@ -54,9 +72,15 @@ class View(QWidget):
         else:
             QDesktopServices.openUrl(url)
 
-    def showToolTip(self, link, title, textContent):
-        if title.isEmpty():
-            text = link
-        else:
-            text = QString(title + "\n" + link)
-        QToolTip.showText(QCursor.pos() + QPoint(12, 12), text) #, self.view.viewport())
+    def showHoveredLink(self, link, title, textContent):
+        if link.isEmpty():
+            self.linkLabelHideTimer.start()
+            return
+
+        self.linkLabelHideTimer.stop()
+        text = link
+        text.replace("file:///", "/")
+        self.linkLabel.setText(text)
+        self.linkLabel.adjustSize()
+
+        self.linkLabel.show()
