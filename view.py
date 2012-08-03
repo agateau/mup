@@ -43,7 +43,7 @@ class View(QWidget):
             filename = os.path.join(self.dataDir, "placeholder.md")
 
         html = converters.convert(filename)
-        baseUrl = QUrl(os.path.dirname(filename) + "/")
+        baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
         self.view.setHtml(html, baseUrl)
 
     def _openUrl(self, url):
