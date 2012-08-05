@@ -19,7 +19,8 @@ class MarkdownConverter(object):
 
     def __init__(self):
         dataDir = os.path.dirname(__file__)
-        self.template = open(os.path.join(dataDir, "template.html")).read()
+        templateFilename = os.path.join(dataDir, "template.html")
+        self.template = unicode(open(templateFilename).read(), "utf-8")
 
     def convert(self, txt):
         return self.template.replace("%content%", markdown.markdown(txt))
@@ -39,7 +40,7 @@ class HtmlConverter(object):
     MATCHES = ["*.html", "*.htm"]
 
     def convert(self, src):
-        return unicode(src, "utf-8")
+        return src
 
 def _init():
     lst = []
@@ -71,5 +72,5 @@ def convert(filename):
     if not converter:
         print "Don't know how to convert file '%s'. Maybe you need to install a module for it?" % filename
         return
-    src = open(filename).read()
+    src = unicode(open(filename).read(), "utf-8")
     return converter.convert(src)
