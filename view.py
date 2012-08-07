@@ -60,9 +60,14 @@ class View(QWidget):
         if not os.path.exists(filename):
             filename = os.path.join(self.dataDir, "placeholder.md")
 
+        frame = self.view.page().currentFrame()
+        pos = frame.scrollPosition()
+
         html = converters.convert(filename)
         baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
         self.view.setHtml(html, baseUrl)
+
+        frame.setScrollPosition(pos)
 
     def _openUrl(self, url):
         if url.scheme() == "internal":
