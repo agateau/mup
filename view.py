@@ -67,7 +67,9 @@ class View(QWidget):
         baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
         self.view.setHtml(html, baseUrl)
 
-        frame.setScrollPosition(pos)
+        # Wait for the page to be loaded before setting old position
+        # FIXME: Should we do this after QWebView::loadFinished() instead
+        QTimer.singleShot(0, lambda :frame.setScrollPosition(pos))
 
     def _openUrl(self, url):
         if url.scheme() == "internal":
