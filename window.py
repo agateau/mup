@@ -28,12 +28,17 @@ class Window(QMainWindow):
 
     def setupToolBar(self):
         toolBar = self.addToolBar(self.tr("Main"))
+        toolBar.setMovable(False)
+        toolBar.setFloatable(False)
+        toolBar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
 
         action = toolBar.addAction(self.tr("Reload"))
+        action.setIcon(QIcon.fromTheme("view-refresh"))
         action.setShortcut(Qt.Key_F5)
         action.triggered.connect(self.reload)
 
-        action = toolBar.addAction(self.tr("Edit"))
+        action = toolBar.addAction(self.tr("Open with Editor"))
+        action.setIcon(QIcon.fromTheme("document-edit"))
         action.triggered.connect(self.edit)
 
     def setupView(self):
