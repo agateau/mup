@@ -1,5 +1,6 @@
 import fnmatch
 import os
+import re
 
 try:
     import docutils.core
@@ -64,8 +65,28 @@ def _findConverter(filename):
                 return converter
     return None
 
+
+def _skipHeader(txt):
+    """
+    Skip any yaml header, if present
+    """
+    rx = re.compile("^[-a-zA-Z0-9_]+:")
+    if not rx.match(txt):
+        return txt
+
+    src = txt.split("\n")
+    for pos, line in enumerate(src):
+        if line == "":
+            # We passed the header
+            return "\n".join(src[pos+1:])
+
+    print "Warning: Empty text found"
+    return ""
+
+
 def canHandle(filename):
     return _findConverter(filename) is not None
+
 
 def convert(filename):
     converter = _findConverter(filename)
@@ -73,4 +94,5 @@ def convert(filename):
         print "Don't know how to convert file '%s'. Maybe you need to install a module for it?" % filename
         return
     src = unicode(open(filename).read(), "utf-8")
+    src = _skipHeader(src)
     return converter.convert(src)
