@@ -32,6 +32,11 @@ class Window(QMainWindow):
         toolBar.setFloatable(False)
         toolBar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
 
+        action = toolBar.addAction(self.tr("Open"))
+        action.setIcon(QIcon.fromTheme("document-open"))
+        action.setShortcut(Qt.Key_Control | Qt.Key_O)
+        action.triggered.connect(self.openFileDialog)
+
         action = toolBar.addAction(self.tr("Reload"))
         action.setIcon(QIcon.fromTheme("view-refresh"))
         action.setShortcut(Qt.Key_F5)
@@ -64,3 +69,9 @@ class Window(QMainWindow):
             self.edit()
         else:
             print "Don't know how to handle internal url", url.toString()
+
+    def openFileDialog(self):
+        name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))
+        if not name:
+            return
+        self.load(name)
