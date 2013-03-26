@@ -21,6 +21,7 @@ class Window(QMainWindow):
         self.setupToolBar()
         self.setupView()
         self.setCentralWidget(self.view)
+        self.setWindowIcon(QIcon.fromTheme("text-plain"))
 
     def closeEvent(self, event):
         self.watcher.stop()
