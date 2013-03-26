@@ -35,12 +35,12 @@ class Window(QMainWindow):
 
         action = toolBar.addAction(self.tr("Open"))
         action.setIcon(QIcon.fromTheme("document-open"))
-        action.setShortcut(Qt.Key_Control | Qt.Key_O)
+        action.setShortcut(QKeySequence.Open)
         action.triggered.connect(self.openFileDialog)
 
         action = toolBar.addAction(self.tr("Reload"))
         action.setIcon(QIcon.fromTheme("view-refresh"))
-        action.setShortcut(Qt.Key_F5)
+        action.setShortcut(QKeySequence.Refresh)
         action.triggered.connect(self.reload)
 
         action = toolBar.addAction(self.tr("Open with Editor"))
