@@ -11,7 +11,7 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
 
-    if len(sys.argv) >= 2:
+    if len(sys.argv) > 2:
         print "USAGE: mdview <file.md>"
         return 1
 
