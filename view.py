@@ -27,6 +27,8 @@ class View(QWidget):
         layout.setMargin(0)
         layout.addWidget(self.view)
 
+        self._lastScrollPos = None
+
     def setupView(self):
         self.view = QWebView(self)
         page = WebPage()
@@ -61,15 +63,19 @@ class View(QWidget):
             filename = os.path.join(self.dataDir, "placeholder.md")
 
         frame = self.view.page().currentFrame()
-        pos = frame.scrollPosition()
+        self._lastScrollPos = frame.scrollPosition()
 
         html = converters.convert(filename)
         baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
+        self.view.loadFinished.connect(self._onLoadFinished)
         self.view.setHtml(html, baseUrl)
 
-        # Wait for the page to be loaded before setting old position
-        # FIXME: Should we do this after QWebView::loadFinished() instead
-        QTimer.singleShot(0, lambda :frame.setScrollPosition(pos))
+    def _onLoadFinished(self):
+        if self._lastScrollPos is not None:
+            frame = self.view.page().currentFrame()
+            frame.setScrollPosition(self._lastScrollPos)
+            self._lastScrollPos = None
+            self.view.loadFinished.disconnect(self._onLoadFinished)
 
     def _openUrl(self, url):
         if url.scheme() == "internal":
