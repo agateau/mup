@@ -29,7 +29,6 @@ you will have to write a wrapper shell script.
 # Requirements
 
 - PyQt4
-- pyinotify
 
 Optional, but you want at least one of those:
 

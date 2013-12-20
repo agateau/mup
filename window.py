@@ -6,7 +6,6 @@ from PyQt4.QtGui import *
 
 import config
 from view import View
-from watcher import Watcher
 
 class Window(QMainWindow):
     def __init__(self):
@@ -15,8 +14,8 @@ class Window(QMainWindow):
         self.dataDir = os.path.dirname(__file__)
         self.config = config.load(self.dataDir)
         self.filename = QString()
-        self.watcher = Watcher(self)
-        self.watcher.changed.connect(self.reload)
+        self.watcher = QFileSystemWatcher(self)
+        self.watcher.fileChanged.connect(self._onFileChanged)
 
         self.setupToolBar()
         self.setupView()
@@ -24,7 +23,6 @@ class Window(QMainWindow):
         self.setWindowIcon(QIcon.fromTheme("text-plain"))
 
     def closeEvent(self, event):
-        self.watcher.stop()
         QMainWindow.closeEvent(self, event)
 
     def setupToolBar(self):
@@ -53,10 +51,26 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
     def load(self, filename):
+        if not self.filename.isEmpty():
+            self.watcher.removePath(self.filename)
         self.filename = QString(os.path.abspath(unicode(filename)))
-        self.watcher.setFilename(self.filename)
+        self.watcher.addPath(self.filename)
         self.setWindowTitle(self.filename + " - mdview")
         self.view.load(self.filename)
+
+    def _onFileChanged(self, name):
+        if os.path.exists(self.filename):
+            self.watcher.addPath(self.filename)
+            self.reload()
+        else:
+            self._scheduleCheck()
+
+    def _scheduleCheck(self):
+        if os.path.exists(self.filename):
+            self.watcher.addPath(self.filename)
+            self.reload()
+        else:
+            QTimer.singleShot(500, self._scheduleCheck)
 
     def reload(self):
         self.view.reload()
