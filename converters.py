@@ -16,7 +16,7 @@ except ImportError:
 
 
 class MarkdownConverter(object):
-    MATCHES = ["*.md", "*.mkd", "*.markdown"]
+    MATCHES = ["*.md", "*.mkd", "*.markdown", "README"]
 
     def __init__(self):
         dataDir = os.path.dirname(__file__)
@@ -58,7 +58,8 @@ def _init():
 _converters = _init()
 
 
-def _findConverter(filename):
+def _findConverter(filepath):
+    filename = os.path.basename(filepath)
     for converter in _converters:
         for match in converter.MATCHES:
             if fnmatch.fnmatch(filename, match):
@@ -91,8 +92,7 @@ def canHandle(filename):
 def convert(filename):
     converter = _findConverter(filename)
     if not converter:
-        print "Don't know how to convert file '%s'. Maybe you need to install a module for it?" % filename
-        return
+        return "Don't know how to convert file '%s'. Maybe you need to install a module for it?" % filename
     src = unicode(open(filename).read(), "utf-8")
     src = _skipHeader(src)
     return converter.convert(src)
