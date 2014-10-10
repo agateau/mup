@@ -103,7 +103,7 @@ class Window(QMainWindow):
         self.view.reload()
 
     def edit(self):
-        editor = self.config.get("general", "editor")
+        editor = self.config.get("editor", "gvim")
         subprocess.call([editor, self.filename])
 
     def handleInternalUrl(self, url):

@@ -20,8 +20,7 @@ You can create linked pages by adding links to other files which end with
 To configure which editor should be used, edit `~/.config/mdview.conf` and add
 the following content:
 
-    [general]
-    editor=name-of-your-editor
+    editor: name-of-your-editor
 
 Note: for now you cannot define arguments for the editor. If you need arguments
 you will have to write a wrapper shell script.
@@ -29,8 +28,10 @@ you will have to write a wrapper shell script.
 # Requirements
 
 - PyQt4
+- yaml
 
 Optional, but you want at least one of those:
 
 - markdown
 - docutils
+- pandoc
