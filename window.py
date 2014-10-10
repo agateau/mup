@@ -71,7 +71,7 @@ class Window(QMainWindow):
             viewFilename = os.path.join(self.dataDir, "placeholder.html")
         self.converterList = converters.findConverters(viewFilename)
         if not self.converterList:
-            viewFilename = os.path.join(self.dataDir, "placeholder.html")
+            viewFilename = os.path.join(self.dataDir, "unsupported.html")
             self.converterList = converters.findConverters(viewFilename)
         assert self.converterList
         self.updateConverterComboBox()
