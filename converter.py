@@ -9,6 +9,8 @@ def loadDataFile(filename):
 
 
 _template = None
+
+
 def applyTemplate(html):
     global _template
     if _template is None:

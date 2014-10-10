@@ -1,6 +1,5 @@
 import fnmatch
 import os
-import re
 
 try:
     import docutils.core
@@ -58,13 +57,16 @@ class HtmlConverter(Converter):
         _, ext = os.path.splitext(filename)
         return ext.lower() in (".htm", ".html")
 
+
 _converters = []
+
 
 def init(converterConfigList):
     global _converters
 
     for dct in converterConfigList:
-        converter = ProcessConverter(dct["name"], cmd=dct["cmd"], args=dct.get("args"),
+        converter = ProcessConverter(dct["name"], cmd=dct["cmd"],
+                                     args=dct.get("args"),
                                      matches=dct["matches"])
         if converter.isAvailable():
             _converters.append(converter)
@@ -77,6 +79,7 @@ def init(converterConfigList):
 
     _converters.append(HtmlConverter())
     return _converters
+
 
 def findConverters(filepath):
     filename = os.path.basename(filepath)

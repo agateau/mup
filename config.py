@@ -4,6 +4,7 @@ import yaml
 
 CONFIG_NAME = "mdview.conf"
 
+
 def load(defaultDir):
     default = os.path.join(defaultDir, CONFIG_NAME)
     user = os.path.join(os.path.expanduser("~/.config"), CONFIG_NAME)

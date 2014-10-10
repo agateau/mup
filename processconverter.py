@@ -1,9 +1,9 @@
 import distutils.spawn
 import fnmatch
-import os
 import subprocess
 
 from converter import Converter, applyTemplate
+
 
 class ProcessConverter(Converter):
     """

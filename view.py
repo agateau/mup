@@ -4,9 +4,11 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
+
 class WebPage(QWebPage):
     def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
         print "JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg)
+
 
 class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)

@@ -7,6 +7,7 @@ from PyQt4.QtGui import *
 
 from window import Window
 
+
 def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
@@ -22,6 +23,7 @@ def main():
     window.show()
     app.exec_()
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

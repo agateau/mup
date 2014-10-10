@@ -9,6 +9,7 @@ from view import View
 
 import converters
 
+
 class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
