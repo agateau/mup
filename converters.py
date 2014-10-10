@@ -58,23 +58,25 @@ class HtmlConverter(Converter):
         _, ext = os.path.splitext(filename)
         return ext.lower() in (".htm", ".html")
 
+_converters = []
 
-def _init():
-    lst = []
+def init(converterConfigList):
+    global _converters
 
-    lst.append(ProcessConverter("Pandoc", "pandoc", ["*.md", "*.mkd", "*.markdown", "README"]))
+    for dct in converterConfigList:
+        converter = ProcessConverter(dct["name"], cmd=dct["cmd"], args=dct.get("args"),
+                                     matches=dct["matches"])
+        if converter.isAvailable():
+            _converters.append(converter)
 
     if HAS_MARKDOWN:
-        lst.append(MarkdownConverter())
+        _converters.append(MarkdownConverter())
 
     if HAS_DOCUTILS:
-        lst.append(RstConverter())
+        _converters.append(RstConverter())
 
-    lst.append(HtmlConverter())
-    return lst
-
-_converters = _init()
-
+    _converters.append(HtmlConverter())
+    return _converters
 
 def findConverters(filepath):
     filename = os.path.basename(filepath)
