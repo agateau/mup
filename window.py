@@ -7,13 +7,16 @@ from PyQt4.QtGui import *
 import config
 from view import View
 
+import converters
+
 class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
         self.dataDir = os.path.dirname(__file__)
         self.config = config.load(self.dataDir)
-        self.filename = QString()
+        self.filename = unicode()
+        self.converterList = []
         self.watcher = QFileSystemWatcher(self)
         self.watcher.fileChanged.connect(self._onFileChanged)
 
@@ -45,18 +48,42 @@ class Window(QMainWindow):
         action.setIcon(QIcon.fromTheme("document-edit"))
         action.triggered.connect(self.edit)
 
+        self.converterComboBox = QComboBox()
+        toolBar.addWidget(self.converterComboBox)
+        self.converterComboBox.currentIndexChanged.connect(self._onConverterChanged)
+        self.converterComboBox.setFocusPolicy(Qt.ClickFocus)
+
     def setupView(self):
         self.view = View(self.dataDir)
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
     def load(self, filename):
-        if not self.filename.isEmpty():
+        if self.filename:
             self.watcher.removePath(self.filename)
-        self.filename = QString(os.path.abspath(unicode(filename)))
+        self.filename = os.path.abspath(unicode(filename))
         self.watcher.addPath(self.filename)
         self.setWindowTitle(self.filename + " - mdview")
-        self.view.load(self.filename)
+
+        if os.path.exists(self.filename):
+            viewFilename = self.filename
+        else:
+            viewFilename = os.path.join(self.dataDir, "placeholder.html")
+        self.converterList = converters.findConverters(viewFilename)
+        if not self.converterList:
+            viewFilename = os.path.join(self.dataDir, "placeholder.html")
+            self.converterList = converters.findConverters(viewFilename)
+        assert self.converterList
+        self.updateConverterComboBox()
+        self.view.load(viewFilename, self.converterList[0])
+
+    def updateConverterComboBox(self):
+        self.converterComboBox.clear()
+        for converter in self.converterList:
+            self.converterComboBox.addItem(converter.name)
+
+    def _onConverterChanged(self, index):
+        self.view.setConverter(self.converterList[index])
 
     def _onFileChanged(self, name):
         if os.path.exists(self.filename):

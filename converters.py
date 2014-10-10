@@ -15,36 +15,54 @@ except ImportError:
     HAS_MARKDOWN = False
 
 
-class MarkdownConverter(object):
-    MATCHES = ["*.md", "*.mkd", "*.markdown", "README"]
-
-    def __init__(self):
-        dataDir = os.path.dirname(__file__)
-        templateFilename = os.path.join(dataDir, "template.html")
-        self.template = unicode(open(templateFilename).read(), "utf-8")
-
-    def convert(self, txt):
-        return self.template.replace("%content%", markdown.markdown(txt))
+from converter import Converter, applyTemplate
+from processconverter import ProcessConverter
 
 
-class RstConverter(object):
-    MATCHES = ["*.rst"]
+class MarkdownConverter(Converter):
+    name = "python-markdown"
 
-    def convert(self, txt):
+    def _doConvert(self, txt):
+        html = markdown.markdown(txt)
+        return applyTemplate(html)
+
+    def supports(self, filename):
+        MATCHES = ["*.md", "*.mkd", "*.markdown", "README"]
+        for match in MATCHES:
+            if fnmatch.fnmatch(filename, match):
+                return True
+        return False
+
+
+class RstConverter(Converter):
+    name = "RST"
+
+    def _doConvert(self, txt):
         return docutils.core.publish_string(txt, writer_name="html")
 
+    def supports(self, filename):
+        _, ext = os.path.splitext(filename)
+        return ext.lower() == ".rst"
 
-class HtmlConverter(object):
+
+class HtmlConverter(Converter):
     """
     A dumb converter which just passes content unaltered
     """
-    MATCHES = ["*.html", "*.htm"]
+    name = "Straight HTML"
 
-    def convert(self, src):
+    def _doConvert(self, src):
         return src
+
+    def supports(self, filename):
+        _, ext = os.path.splitext(filename)
+        return ext.lower() in (".htm", ".html")
+
 
 def _init():
     lst = []
+
+    lst.append(ProcessConverter("Pandoc", "pandoc", ["*.md", "*.mkd", "*.markdown", "README"]))
 
     if HAS_MARKDOWN:
         lst.append(MarkdownConverter())
@@ -58,41 +76,6 @@ def _init():
 _converters = _init()
 
 
-def _findConverter(filepath):
+def findConverters(filepath):
     filename = os.path.basename(filepath)
-    for converter in _converters:
-        for match in converter.MATCHES:
-            if fnmatch.fnmatch(filename, match):
-                return converter
-    return None
-
-
-def _skipHeader(txt):
-    """
-    Skip any yaml header, if present
-    """
-    rx = re.compile("^[-a-zA-Z0-9_]+:")
-    if not rx.match(txt):
-        return txt
-
-    src = txt.split("\n")
-    for pos, line in enumerate(src):
-        if line == "":
-            # We passed the header
-            return "\n".join(src[pos+1:])
-
-    print "Warning: Empty text found"
-    return ""
-
-
-def canHandle(filename):
-    return _findConverter(filename) is not None
-
-
-def convert(filename):
-    converter = _findConverter(filename)
-    if not converter:
-        return "Don't know how to convert file '%s'. Maybe you need to install a module for it?" % filename
-    src = unicode(open(filename).read(), "utf-8")
-    src = _skipHeader(src)
-    return converter.convert(src)
+    return [x for x in _converters if x.supports(filename)]

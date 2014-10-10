@@ -4,8 +4,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
-import converters
-
 class WebPage(QWebPage):
     def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
         print "JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg)
@@ -18,6 +16,7 @@ class View(QWidget):
         QWidget.__init__(self, parent)
         self.dataDir = dataDir
         self.filename = QString()
+        self.converter = None
 
         self.setupView()
 
@@ -53,22 +52,28 @@ class View(QWidget):
         self.linkLabelHideTimer.setInterval(250)
         self.linkLabelHideTimer.timeout.connect(self.linkLabel.hide)
 
-    def load(self, filename):
+    def load(self, filename, converter):
         self.filename = filename
+        self.converter = converter
         self.reload()
 
     def reload(self):
         filename = unicode(self.filename)
         if not os.path.exists(filename):
-            filename = os.path.join(self.dataDir, "placeholder.md")
+            return
+        html = self.converter.convert(filename)
 
         frame = self.view.page().currentFrame()
         self._lastScrollPos = frame.scrollPosition()
 
-        html = converters.convert(filename)
         baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
         self.view.loadFinished.connect(self._onLoadFinished)
         self.view.setHtml(html, baseUrl)
+
+    def setConverter(self, converter):
+        self.converter = converter
+        if self.filename:
+            self.reload()
 
     def _onLoadFinished(self):
         if self._lastScrollPos is not None:
