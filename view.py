@@ -4,6 +4,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
+import converters
+
 
 class WebPage(QWebPage):
     def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
@@ -87,7 +89,8 @@ class View(QWidget):
     def _openUrl(self, url):
         if url.scheme() == "internal":
             self.internalUrlClicked.emit(url)
-        if url.scheme() in ("file", "") and converters.canHandle(unicode(url.path())):
+        if url.scheme() in ("file", "") and \
+                converters.findConverters(unicode(url.path())):
             self.loadRequested.emit(url.path())
         else:
             QDesktopServices.openUrl(url)
