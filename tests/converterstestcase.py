@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-import converters
+import converter
 
 class ConvertersTestCase(TestCase):
     def testSkipHeader(self):
@@ -10,5 +10,5 @@ class ConvertersTestCase(TestCase):
             ("Plain text", "Plain text"),
             ]
         for src, expected in data:
-            dst = converters._skipHeader(src)
+            dst = converter._skipHeader(src)
             self.assertEquals(dst, expected)
