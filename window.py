@@ -52,7 +52,12 @@ class Window(QMainWindow):
         action.triggered.connect(self.edit)
 
         self.converterComboBox = QComboBox()
-        toolBar.addWidget(self.converterComboBox)
+        widget = QWidget()
+        layout = QHBoxLayout(widget)
+        layout.addStretch()
+        layout.addWidget(QLabel(self.tr("Converter:")))
+        layout.addWidget(self.converterComboBox)
+        toolBar.addWidget(widget)
         self.converterComboBox.currentIndexChanged.connect(self._onConverterChanged)
         self.converterComboBox.setFocusPolicy(Qt.ClickFocus)
 
