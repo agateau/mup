@@ -83,4 +83,7 @@ def init(converterConfigList):
 
 def findConverters(filepath):
     filename = os.path.basename(filepath)
+    remaining, ext = os.path.splitext(filename)
+    if ext == '.gz':
+        filename = remaining
     return [x for x in _converters if x.supports(filename)]

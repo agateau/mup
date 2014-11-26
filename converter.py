@@ -1,3 +1,4 @@
+import gzip
 import os
 import re
 
@@ -41,8 +42,16 @@ class Converter(object):
         raise NotImplementedError
 
     def convert(self, filename):
-        with open(filename) as f:
-            src = unicode(f.read(), "utf-8")
+        ext = os.path.splitext(filename)[1]
+        if ext == '.gz':
+            fl = gzip.open(filename)
+        else:
+            fl = open(filename)
+        try:
+            src = unicode(fl.read(), "utf-8")
+        finally:
+            fl.close()
+
         src = _skipHeader(src)
         return self._doConvert(src)
 
