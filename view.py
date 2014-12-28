@@ -23,27 +23,26 @@ class View(QWidget):
         self._thread = ConverterThread()
         self._thread.done.connect(self._setHtml)
 
-        self.setupView()
-
-        self.setupLinkLabel()
+        self._setupView()
+        self._setupLinkLabel()
 
         layout = QHBoxLayout(self)
         layout.setMargin(0)
-        layout.addWidget(self.view)
+        layout.addWidget(self._view)
 
         self._lastScrollPos = None
 
-    def setupView(self):
-        self.view = QWebView(self)
+    def _setupView(self):
+        self._view = QWebView(self)
         page = WebPage()
         page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         page.linkClicked.connect(self._openUrl)
-        page.linkHovered.connect(self.showHoveredLink)
-        self.view.setPage(page)
+        page.linkHovered.connect(self._showHoveredLink)
+        self._view.setPage(page)
 
-    def setupLinkLabel(self):
-        self.linkLabel = QLabel(self.view)
-        self.linkLabel.setStyleSheet("""
+    def _setupLinkLabel(self):
+        self._linkLabel = QLabel(self._view)
+        self._linkLabel.setStyleSheet("""
         background-color: #abc;
         color: #123;
         padding: 3px;
@@ -51,11 +50,11 @@ class View(QWidget):
         border-right: 1px solid #bce;
         border-bottom: 1px solid #bce;
         """)
-        self.linkLabel.hide()
-        self.linkLabelHideTimer = QTimer(self)
-        self.linkLabelHideTimer.setSingleShot(True)
-        self.linkLabelHideTimer.setInterval(250)
-        self.linkLabelHideTimer.timeout.connect(self.linkLabel.hide)
+        self._linkLabel.hide()
+        self._linkLabelHideTimer = QTimer(self)
+        self._linkLabelHideTimer.setSingleShot(True)
+        self._linkLabelHideTimer.setInterval(250)
+        self._linkLabelHideTimer.timeout.connect(self._linkLabel.hide)
 
     def load(self, filename, converter):
         self._thread.setFilename(filename)
@@ -66,13 +65,13 @@ class View(QWidget):
         self._thread.start()
 
     def _setHtml(self, html):
-        frame = self.view.page().currentFrame()
+        frame = self._view.page().currentFrame()
         self._lastScrollPos = frame.scrollPosition()
 
         filename = unicode(self._thread.filename())
         baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
-        self.view.loadFinished.connect(self._onLoadFinished)
-        self.view.setHtml(html, baseUrl)
+        self._view.loadFinished.connect(self._onLoadFinished)
+        self._view.setHtml(html, baseUrl)
 
     def setConverter(self, converter):
         self._thread.setConverter(converter)
@@ -80,10 +79,10 @@ class View(QWidget):
 
     def _onLoadFinished(self):
         if self._lastScrollPos is not None:
-            frame = self.view.page().currentFrame()
+            frame = self._view.page().currentFrame()
             frame.setScrollPosition(self._lastScrollPos)
             self._lastScrollPos = None
-            self.view.loadFinished.disconnect(self._onLoadFinished)
+            self._view.loadFinished.disconnect(self._onLoadFinished)
 
     def _openUrl(self, url):
         if url.scheme() == "internal":
@@ -94,15 +93,15 @@ class View(QWidget):
         else:
             QDesktopServices.openUrl(url)
 
-    def showHoveredLink(self, link, title, textContent):
+    def _showHoveredLink(self, link, title, textContent):
         if link.isEmpty():
-            self.linkLabelHideTimer.start()
+            self._linkLabelHideTimer.start()
             return
 
-        self.linkLabelHideTimer.stop()
+        self._linkLabelHideTimer.stop()
         text = link
         text.replace("file:///", "/")
-        self.linkLabel.setText(text)
-        self.linkLabel.adjustSize()
+        self._linkLabel.setText(text)
+        self._linkLabel.adjustSize()
 
-        self.linkLabel.show()
+        self._linkLabel.show()
