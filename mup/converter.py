@@ -2,11 +2,11 @@ import gzip
 import os
 import re
 
+from pkg_resources import resource_string
+
 
 def loadDataFile(filename):
-    dataDir = os.path.dirname(__file__)
-    filepath = os.path.join(dataDir, filename)
-    return unicode(open(filepath).read(), "utf-8")
+    return resource_string(__name__, os.path.join("data", filename))
 
 
 _template = None

@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+from pkg_resources import resource_filename
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -14,8 +16,7 @@ class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
-        self.dataDir = os.path.dirname(__file__)
-        self.config = config.load(self.dataDir)
+        self.config = config.load()
         self.filename = unicode()
         self.converterList = []
         converters.init(self.config.get("converters", []))
@@ -76,10 +77,10 @@ class Window(QMainWindow):
         if os.path.exists(self.filename):
             viewFilename = self.filename
         else:
-            viewFilename = os.path.join(self.dataDir, "placeholder.html")
+            viewFilename = resource_filename(__name__, "data/placeholder.html")
         self.converterList = converters.findConverters(viewFilename)
         if not self.converterList:
-            viewFilename = os.path.join(self.dataDir, "unsupported.html")
+            viewFilename = resource_filename(__name__, "data/unsupported.html")
             self.converterList = converters.findConverters(viewFilename)
         assert self.converterList
         self.updateConverterComboBox()
