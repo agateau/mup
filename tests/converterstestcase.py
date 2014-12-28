@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-import converter
+from mup import converter
 
 class ConvertersTestCase(TestCase):
     def testSkipHeader(self):
