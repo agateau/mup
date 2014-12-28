@@ -5,17 +5,13 @@ import re
 from pkg_resources import resource_string
 
 
-def loadDataFile(filename):
-    return resource_string(__name__, os.path.join("data", filename))
-
-
 _template = None
 
 
 def applyTemplate(html):
     global _template
     if _template is None:
-        _template = loadDataFile("template.html")
+        _template = resource_string("mup", "data/template.html")
     return _template.replace("%content%", html)
 
 

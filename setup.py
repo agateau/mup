@@ -21,7 +21,7 @@ setup(name=mup.__appname__,
     license=mup.__license__,
     platforms=["any"],
     url="http://github.com/agateau/mup",
-    packages=["mup"],
+    packages=["mup", "mup.converters"],
     package_data={
         "mup": ["data/*.html", "config/*.conf"],
     },
