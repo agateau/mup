@@ -1,19 +1,15 @@
-import os
-
 import yaml
 
-from pkg_resources import resource_filename
-
-CONFIG_NAME = "mup.conf"
+from xdg import BaseDirectory
 
 
 def load():
-    default = resource_filename(__name__, os.path.join('config', CONFIG_NAME))
-    user = os.path.join(os.path.expanduser("~/.config"), CONFIG_NAME)
     dct = {}
-    for filepath in default, user:
-        if os.path.exists(filepath):
-            with open(filepath) as f:
+    for filepath in BaseDirectory.load_config_paths("mup/mup.conf"):
+        with open(filepath) as f:
+            try:
                 dct.update(yaml.load(f))
+            except Exception, e:
+                print("Failed to parse {}, skipping it. (Error: {})".format(filepath, e))
 
     return dct

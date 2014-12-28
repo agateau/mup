@@ -19,7 +19,7 @@ class Window(QMainWindow):
         self.config = config.load()
         self.filename = unicode()
         self.converterList = []
-        converters.init(self.config.get("converters", []))
+        converters.init()
 
         self.watcher = QFileSystemWatcher(self)
         self.watcher.fileChanged.connect(self._onFileChanged)

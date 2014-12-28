@@ -1,5 +1,8 @@
 import os
 
+import yaml
+
+from xdg import BaseDirectory
 
 from htmlconverter import HtmlConverter
 from processconverter import ProcessConverter
@@ -8,15 +11,26 @@ from processconverter import ProcessConverter
 _converters = []
 
 
-def init(converterConfigList):
-    global _converters
+def _loadConvertersFromDir(configDir):
+    for name in os.listdir(configDir):
+        _, ext = os.path.splitext(name)
+        if ext != ".conf":
+            continue
+        with open(os.path.join(configDir, name)) as fp:
+            dct = yaml.load(fp)
 
-    for dct in converterConfigList:
         converter = ProcessConverter(dct["name"], cmd=dct["cmd"],
                                      args=dct.get("args"),
                                      matches=dct["matches"])
         if converter.isAvailable():
-            _converters.append(converter)
+            yield converter
+
+
+def init():
+    global _converters
+
+    for convertersDir in BaseDirectory.load_data_paths("mup/converters"):
+        _converters.extend(_loadConvertersFromDir(convertersDir))
 
     try:
         from markdownconverter import MarkdownConverter
