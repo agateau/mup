@@ -13,7 +13,7 @@ def main():
     app = QApplication(sys.argv)
 
     if len(sys.argv) > 2:
-        print "USAGE: mdview <file.md>"
+        print "USAGE: mup <file.md>"
         return 1
 
     window = Window()

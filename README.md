@@ -1,23 +1,21 @@
 # What is it?
 
-Mdview is a markdown and rst viewer and browser. You can use it to view
-markdown or rst files and create lightweight wiki-like structures.
+MUP is a markup reader. You can use it to read text written in multiple markup
+formats. MUP supports many Markdown flavors, reStructuredText and can easily be
+extended to support other formats.
 
 # Usage
 
-Start mdview like this:
+Start MUP like this:
 
-    mdview file.md
+    mup file.md
 
 You can edit the file by clicking the "Edit" button. This will open your
 preferred editor.
 
-You can create linked pages by adding links to other files which end with
-".md".
-
 ## Configuring the editor
 
-To configure which editor should be used, edit `~/.config/mdview.conf` and add
+To configure which editor should be used, edit `~/.config/mup.conf` and add
 the following content:
 
     editor: name-of-your-editor
@@ -30,7 +28,7 @@ you will have to write a wrapper shell script.
 - PyQt4
 - yaml
 
-Optional, but you want at least one of those:
+Optional, but you want at least one:
 
 - markdown
 - docutils

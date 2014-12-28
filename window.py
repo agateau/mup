@@ -71,7 +71,7 @@ class Window(QMainWindow):
             self.watcher.removePath(self.filename)
         self.filename = os.path.abspath(unicode(filename))
         self.watcher.addPath(self.filename)
-        self.setWindowTitle(self.filename + " - mdview")
+        self.setWindowTitle(self.filename + " - MUP")
 
         if os.path.exists(self.filename):
             viewFilename = self.filename

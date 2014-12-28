@@ -2,7 +2,7 @@ import os
 
 import yaml
 
-CONFIG_NAME = "mdview.conf"
+CONFIG_NAME = "mup.conf"
 
 
 def load(defaultDir):

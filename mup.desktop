@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=MUP
+GenericName=Markup reader
+Comment=A markup reader
+Exec=mup %F
+Terminal=false
+Icon=mup
+Type=Application
+Categories=Qt;KDE;Viewer;
+MimeType=text/x-markdown;text/x-rst;
