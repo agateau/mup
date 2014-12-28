@@ -18,9 +18,8 @@ class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)
     loadRequested = pyqtSignal(QString)
 
-    def __init__(self, dataDir, parent=None):
+    def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self.dataDir = dataDir
         self._thread = ConverterThread()
         self._thread.done.connect(self._setHtml)
 

@@ -62,7 +62,7 @@ class Window(QMainWindow):
         self.converterComboBox.setFocusPolicy(Qt.ClickFocus)
 
     def setupView(self):
-        self.view = View(self.dataDir)
+        self.view = View()
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
