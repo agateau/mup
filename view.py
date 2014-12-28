@@ -6,6 +6,8 @@ from PyQt4.QtWebKit import *
 
 import converters
 
+from converterthread import ConverterThread
+
 
 class WebPage(QWebPage):
     def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
@@ -19,8 +21,8 @@ class View(QWidget):
     def __init__(self, dataDir, parent=None):
         QWidget.__init__(self, parent)
         self.dataDir = dataDir
-        self.filename = QString()
-        self.converter = None
+        self._thread = ConverterThread()
+        self._thread.done.connect(self._setHtml)
 
         self.setupView()
 
@@ -57,27 +59,25 @@ class View(QWidget):
         self.linkLabelHideTimer.timeout.connect(self.linkLabel.hide)
 
     def load(self, filename, converter):
-        self.filename = filename
-        self.converter = converter
+        self._thread.setFilename(filename)
+        self._thread.setConverter(converter)
         self.reload()
 
     def reload(self):
-        filename = unicode(self.filename)
-        if not os.path.exists(filename):
-            return
-        html = self.converter.convert(filename)
+        self._thread.start()
 
+    def _setHtml(self, html):
         frame = self.view.page().currentFrame()
         self._lastScrollPos = frame.scrollPosition()
 
+        filename = unicode(self._thread.filename())
         baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
         self.view.loadFinished.connect(self._onLoadFinished)
         self.view.setHtml(html, baseUrl)
 
     def setConverter(self, converter):
-        self.converter = converter
-        if self.filename:
-            self.reload()
+        self._thread.setConverter(converter)
+        self.reload()
 
     def _onLoadFinished(self):
         if self._lastScrollPos is not None:
