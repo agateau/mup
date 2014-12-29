@@ -49,4 +49,6 @@ class ProcessConverter(Converter):
         html = stdout.decode('utf-8')
         if not self._full:
             html = applyTemplate(html)
+        if stderr:
+            logging.error(stderr)
         return html
