@@ -1,8 +1,6 @@
 import os
 import logging
 
-import yaml
-
 from xdg import BaseDirectory
 
 from htmlconverter import HtmlConverter
@@ -18,21 +16,13 @@ def _loadConvertersFromDir(configDir):
         if ext != ".conf":
             continue
         fullPath = os.path.join(configDir, name)
-        logging.info('loading {}'.format(fullPath))
-        with open(fullPath) as fp:
-            try:
-                dct = yaml.load(fp)
-            except Exception as exc:
-                logging.exception('Failed to load {}, skipping it.'.format(fullPath))
-                continue
-
-        converter = ProcessConverter(dct["name"], cmd=dct["cmd"],
-                                     args=dct.get("args"),
-                                     matches=dct["matches"])
+        converter = ProcessConverter.fromConfigFile(fullPath)
+        if converter is None:
+            continue
         if converter.isAvailable():
             yield converter
         else:
-            logging.info('{} is not available'.format(dct['name']))
+            logging.info('{} is not available'.format(converter.name))
 
 
 def init():
