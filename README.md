@@ -27,6 +27,8 @@ By default, MUP comes with the following external converters:
 - CommonMark
 - Gruber Markdown
 - Ronn
+- Man pages
+- Asciidoc
 
 # Usage
 
@@ -83,3 +85,5 @@ Optional tools:
 
 - pandoc
 - ronn
+- groff, for man pages
+- asciidoc
