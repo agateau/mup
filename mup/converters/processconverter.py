@@ -27,6 +27,7 @@ class ProcessConverter(Converter):
         obj._matches = dct['matches']
         obj._cmd = dct['cmd']
         obj._args = dct.get('args')
+        obj._full = dct.get('full', False)
         return obj
 
     def isAvailable(self):
@@ -46,4 +47,6 @@ class ProcessConverter(Converter):
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate(src.encode('utf-8', errors='replace'))
         html = stdout.decode('utf-8')
-        return applyTemplate(html)
+        if not self._full:
+            html = applyTemplate(html)
+        return html

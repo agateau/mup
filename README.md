@@ -55,11 +55,18 @@ create a `foo.conf` file in `/usr/share/mup/converters` or in
 
     name: Foo
     cmd: foo2html
-    args: --some-arg 3
     matches: ["*.foo", "*.foobar"]
 
 If MUP can find the `foo2html` binary, it should use it whenever it tries to
 open a .foo file.
+
+Other optional keys:
+
+- `args`: Arguments to pass to the command
+- `full`: Set to true if the command creates a complete HTML document, not just
+  an HTML snippet (defaults to false)
+
+The configuration files use the YAML syntax.
 
 # Requirements
 
