@@ -64,7 +64,7 @@ class View(QWidget):
         self._lastScrollPos = frame.scrollPosition()
 
         filename = unicode(self._thread.filename())
-        baseUrl = QUrl.fromLocalFile(os.path.dirname(filename) + "/")
+        baseUrl = QUrl.fromLocalFile(filename)
         self._view.loadFinished.connect(self._onLoadFinished)
         self._view.setHtml(html, baseUrl)
 
@@ -82,11 +82,19 @@ class View(QWidget):
     def _openUrl(self, url):
         if url.scheme() == "internal":
             self.internalUrlClicked.emit(url)
-        if url.scheme() in ("file", "") and \
-                converters.findConverters(unicode(url.path())):
-            self.loadRequested.emit(url.path())
-        else:
-            QDesktopServices.openUrl(url)
+            return
+
+        if url.scheme() in ("file", ""):
+            frame = self._view.page().currentFrame()
+            if url.path() == frame.baseUrl().path():
+                anchor = url.fragment()
+                frame.scrollToAnchor(anchor)
+                return
+            elif converters.findConverters(unicode(url.path())):
+                self.loadRequested.emit(url.path())
+                return
+
+        QDesktopServices.openUrl(url)
 
     def _showHoveredLink(self, link, title, textContent):
         if link.isEmpty():
