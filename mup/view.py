@@ -9,11 +9,6 @@ import converters
 from converterthread import ConverterThread
 
 
-class WebPage(QWebPage):
-    def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
-        print "JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg)
-
-
 class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)
     loadRequested = pyqtSignal(QString)
@@ -34,7 +29,7 @@ class View(QWidget):
 
     def _setupView(self):
         self._view = QWebView(self)
-        page = WebPage()
+        page = QWebPage()
         page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         page.linkClicked.connect(self._openUrl)
         page.linkHovered.connect(self._showHoveredLink)
