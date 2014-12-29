@@ -1,3 +1,5 @@
+import logging
+
 import yaml
 
 from xdg import BaseDirectory
@@ -9,7 +11,7 @@ def load():
         with open(filepath) as f:
             try:
                 dct.update(yaml.load(f))
-            except Exception, e:
-                print("Failed to parse {}, skipping it. (Error: {})".format(filepath, e))
+            except Exception as exc:
+                logging.exception("Failed to load {}, skipping it.".format(filepath))
 
     return dct

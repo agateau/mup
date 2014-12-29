@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 
@@ -119,7 +120,7 @@ class Window(QMainWindow):
         if url.path() == "create":
             self.edit()
         else:
-            print "Don't know how to handle internal url", url.toString()
+            logging.error("Don't know how to handle internal url {}".format(url.toString()))
 
     def openFileDialog(self):
         name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))

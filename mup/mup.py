@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import argparse
+import logging
 import signal
 import sys
 
@@ -12,13 +14,19 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
 
-    if len(sys.argv) > 2:
-        print "USAGE: mup <file.md>"
-        return 1
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--verbose', dest='verbose',
+                        action='store_true', help='Enable debug output')
+    parser.add_argument('markup_file', nargs='?')
+    args = parser.parse_args()
+
+    loglevel = logging.DEBUG if args.verbose else logging.WARNING
+    logging.basicConfig(format='%(levelname)s: %(message)s',
+                        level=loglevel)
 
     window = Window()
-    if len(sys.argv) == 2:
-        window.load(sys.argv[1])
+    if args.markup_file:
+        window.load(args.markup_file)
 
     window.show()
     app.exec_()
