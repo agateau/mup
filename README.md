@@ -41,7 +41,7 @@ preferred editor.
 
 ## Configuring the Editor
 
-To configure which editor should be used, edit `~/.config/mup/mup.conf` and add
+To configure which editor should be used, edit `~/.config/mup/mup.yaml` and add
 the following content:
 
     editor: name-of-your-editor
@@ -52,7 +52,7 @@ you will have to write a wrapper shell script.
 ## Defining a new Converter
 
 To declare the `foo2html` command as a converter for .foo or .foobar files,
-create a `foo.conf` file in `/usr/share/mup/converters` or in
+create a `foo.yaml` file in `/usr/share/mup/converters` or in
 `~/.local/share/mup/converters` with the following content:
 
     name: Foo
@@ -67,8 +67,6 @@ Other optional keys:
 - `args`: Arguments to pass to the command
 - `full`: Set to true if the command creates a complete HTML document, not just
   an HTML snippet (defaults to false)
-
-The configuration files use the YAML syntax.
 
 # Requirements
 

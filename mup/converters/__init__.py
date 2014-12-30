@@ -13,7 +13,7 @@ _converters = []
 def _loadConvertersFromDir(configDir):
     for name in os.listdir(configDir):
         _, ext = os.path.splitext(name)
-        if ext != ".conf":
+        if ext != ".yaml":
             continue
         fullPath = os.path.join(configDir, name)
         converter = ProcessConverter.fromConfigFile(fullPath)
