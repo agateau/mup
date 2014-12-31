@@ -1,8 +1,16 @@
+import codecs
 import gzip
 import os
 import re
 
 from pkg_resources import resource_string
+
+
+_ENC_BOMS = (
+    ('utf-8-sig', (codecs.BOM_UTF8,)),
+    ('utf-16', (codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)),
+    ('utf-32', (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE))
+)
 
 
 _template = None
@@ -13,6 +21,13 @@ def applyTemplate(html):
     if _template is None:
         _template = resource_string("mup", "data/template.html")
     return _template.replace("%content%", html)
+
+
+def _detectEncoding(head, default):
+    for encoding, boms in _ENC_BOMS:
+        if any(head.startswith(bom) for bom in boms):
+            return encoding
+    return default
 
 
 def _skipHeader(txt):
@@ -31,6 +46,18 @@ def _skipHeader(txt):
     return ""
 
 
+def _readFile(fl):
+    """
+    Read a file as unicode, correctly handling BOM
+    """
+    try:
+        raw = fl.read()
+        encoding = _detectEncoding(raw, 'utf-8')
+        return unicode(raw, encoding)
+    finally:
+        fl.close()
+
+
 class Converter(object):
     name = 'Unnamed'
 
@@ -43,10 +70,7 @@ class Converter(object):
             fl = gzip.open(filename)
         else:
             fl = open(filename)
-        try:
-            src = unicode(fl.read(), "utf-8")
-        finally:
-            fl.close()
+        src = _readFile(fl)
 
         src = _skipHeader(src)
         return self._doConvert(src)
