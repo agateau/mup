@@ -4,6 +4,8 @@ MUP is a markup previewer. It supports multiple markup formats. You can use it
 to read markup text, but it is also useful when writing markup text to check
 how your work looks, thanks to its refresh-as-you-save feature.
 
+![MUP in action](http://agateau.com/hotlink/mup.png)
+
 ## Features
 
 - Supports multiple markup formats, easy to extend
