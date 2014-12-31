@@ -94,19 +94,7 @@ Optional tools (for external converters):
 
 ## Installation
 
-Since MUP is a desktop application it must be installed in a place where your
-desktop will find it, otherwise it won't show up in your desktop application
-list.
-
-The best way to install it is to run as root:
-
-    python setup.py install --prefix=$desktop_install_dir
-
-Where `$desktop_install_dir` is usually `/usr`.
-
-This won't work on Debian or Ubuntu however. On these systems, you should use:
-
-    sudo python setup.py install --install-layout=deb
+Run `python setup.py install` as root.
 
 ## Contributing
 
