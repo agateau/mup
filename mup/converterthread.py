@@ -14,16 +14,26 @@ class ConverterThread(QThread):
 
     def setConverter(self, converter):
         with QMutexLocker(self._mutex):
+            if self._converter == converter:
+                return
             self._converter = converter
+            self.reload()
 
     def setFilename(self, filename):
         with QMutexLocker(self._mutex):
+            if self._filename == filename:
+                return
             self._filename = filename
+            self.reload()
 
     def filename(self):
         with QMutexLocker(self._mutex):
             name = self._filename
         return name
+
+    def reload(self):
+        if self._filename and self._converter:
+            self.start()
 
     def run(self):
         with QMutexLocker(self._mutex):

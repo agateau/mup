@@ -52,10 +52,9 @@ class View(QWidget):
     def load(self, filename, converter):
         self._thread.setFilename(filename)
         self._thread.setConverter(converter)
-        self.reload()
 
     def reload(self):
-        self._thread.start()
+        self._thread.reload()
 
     def _setHtml(self, html):
         frame = self._view.page().currentFrame()
@@ -68,7 +67,6 @@ class View(QWidget):
 
     def setConverter(self, converter):
         self._thread.setConverter(converter)
-        self.reload()
 
     def _onLoadFinished(self):
         if self._lastScrollPos is not None:
