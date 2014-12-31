@@ -55,10 +55,13 @@ class Window(QMainWindow):
 
         self.converterComboBox = QComboBox()
         self.converterComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        label = QLabel(self.tr("&Converter:"))
+        label.setBuddy(self.converterComboBox)
+
         widget = QWidget()
         layout = QHBoxLayout(widget)
         layout.addStretch()
-        layout.addWidget(QLabel(self.tr("Converter:")))
+        layout.addWidget(label)
         layout.addWidget(self.converterComboBox)
         toolBar.addWidget(widget)
         self.converterComboBox.currentIndexChanged.connect(self._onConverterChanged)
