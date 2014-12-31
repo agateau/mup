@@ -97,6 +97,8 @@ class Window(QMainWindow):
             self.converterComboBox.addItem(converter.name)
 
     def _onConverterChanged(self, index):
+        if index == -1:
+            return
         self.view.setConverter(self.converterList[index])
 
     def _onFileChanged(self, name):
