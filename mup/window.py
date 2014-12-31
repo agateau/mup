@@ -54,6 +54,7 @@ class Window(QMainWindow):
         action.triggered.connect(self.edit)
 
         self.converterComboBox = QComboBox()
+        self.converterComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
         widget = QWidget()
         layout = QHBoxLayout(widget)
         layout.addStretch()
