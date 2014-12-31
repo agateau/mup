@@ -1,5 +1,8 @@
+import logging
 import os
 import subprocess
+
+from pkg_resources import resource_filename
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -14,11 +17,10 @@ class Window(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
 
-        self.dataDir = os.path.dirname(__file__)
-        self.config = config.load(self.dataDir)
+        self.config = config.load()
         self.filename = unicode()
         self.converterList = []
-        converters.init(self.config.get("converters", []))
+        converters.init()
 
         self.watcher = QFileSystemWatcher(self)
         self.watcher.fileChanged.connect(self._onFileChanged)
@@ -52,17 +54,21 @@ class Window(QMainWindow):
         action.triggered.connect(self.edit)
 
         self.converterComboBox = QComboBox()
+        self.converterComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+        label = QLabel(self.tr("&Converter:"))
+        label.setBuddy(self.converterComboBox)
+
         widget = QWidget()
         layout = QHBoxLayout(widget)
         layout.addStretch()
-        layout.addWidget(QLabel(self.tr("Converter:")))
+        layout.addWidget(label)
         layout.addWidget(self.converterComboBox)
         toolBar.addWidget(widget)
         self.converterComboBox.currentIndexChanged.connect(self._onConverterChanged)
         self.converterComboBox.setFocusPolicy(Qt.ClickFocus)
 
     def setupView(self):
-        self.view = View(self.dataDir)
+        self.view = View()
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
@@ -71,15 +77,15 @@ class Window(QMainWindow):
             self.watcher.removePath(self.filename)
         self.filename = os.path.abspath(unicode(filename))
         self.watcher.addPath(self.filename)
-        self.setWindowTitle(self.filename + " - mdview")
+        self.setWindowTitle(self.filename + " - MUP")
 
         if os.path.exists(self.filename):
             viewFilename = self.filename
         else:
-            viewFilename = os.path.join(self.dataDir, "placeholder.html")
+            viewFilename = resource_filename(__name__, "data/placeholder.html")
         self.converterList = converters.findConverters(viewFilename)
         if not self.converterList:
-            viewFilename = os.path.join(self.dataDir, "unsupported.html")
+            viewFilename = resource_filename(__name__, "data/unsupported.html")
             self.converterList = converters.findConverters(viewFilename)
         assert self.converterList
         self.updateConverterComboBox()
@@ -91,6 +97,8 @@ class Window(QMainWindow):
             self.converterComboBox.addItem(converter.name)
 
     def _onConverterChanged(self, index):
+        if index == -1:
+            return
         self.view.setConverter(self.converterList[index])
 
     def _onFileChanged(self, name):
@@ -118,7 +126,7 @@ class Window(QMainWindow):
         if url.path() == "create":
             self.edit()
         else:
-            print "Don't know how to handle internal url", url.toString()
+            logging.error("Don't know how to handle internal url {}".format(url.toString()))
 
     def openFileDialog(self):
         name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))

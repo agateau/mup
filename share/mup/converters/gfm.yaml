@@ -1,0 +1,4 @@
+name: GitHub Flavored Markdown (Kramdown)
+cmd: kramdown
+args: --input GFM
+matches: ["*.md", "*.mkd", "*.markdown", "README"]

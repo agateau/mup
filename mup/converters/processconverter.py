@@ -1,6 +1,9 @@
 import distutils.spawn
 import fnmatch
+import logging
 import subprocess
+
+import yaml
 
 from converter import Converter, applyTemplate
 
@@ -9,11 +12,23 @@ class ProcessConverter(Converter):
     """
     A converter which can use an external program to convert content
     """
-    def __init__(self, name, matches, cmd, args=""):
-        self.name = name
-        self._matches = matches
-        self._cmd = cmd
-        self._args = args
+    @staticmethod
+    def fromConfigFile(configFile):
+        logging.info('Loading {}'.format(configFile))
+        with open(configFile) as fp:
+            try:
+                dct = yaml.load(fp)
+            except Exception as exc:
+                logging.exception('Failed to load {}.'.format(configFile))
+                return None
+
+        obj = ProcessConverter()
+        obj.name = dct['name']
+        obj._matches = dct['matches']
+        obj._cmd = dct['cmd']
+        obj._args = dct.get('args')
+        obj._full = dct.get('full', False)
+        return obj
 
     def isAvailable(self):
         return bool(distutils.spawn.find_executable(self._cmd))
@@ -32,4 +47,8 @@ class ProcessConverter(Converter):
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate(src.encode('utf-8', errors='replace'))
         html = stdout.decode('utf-8')
-        return applyTemplate(html)
+        if not self._full:
+            html = applyTemplate(html)
+        if stderr:
+            logging.error(stderr)
+        return html
