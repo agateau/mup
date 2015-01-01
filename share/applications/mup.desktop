@@ -6,5 +6,5 @@ Exec=mup %F
 Terminal=false
 Icon=text-x-generic
 Type=Application
-Categories=Qt;Viewer;
+Categories=Qt;Viewer;Office;
 MimeType=text/x-markdown;text/x-rst;
