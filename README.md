@@ -15,6 +15,7 @@ how your work looks, thanks to its refresh-as-you-save feature.
   Jekyll
 - Supports gzipped documents, useful to read documentation shipped with Debian
   packages
+- Comes with a wrapper for man pages
 
 ## Supported Formats
 
@@ -40,10 +41,18 @@ Start MUP like this:
 
     mup markup_file
 
-You can edit the file by clicking the "Edit" button. This will open your
-preferred editor.
+To read a man page with mup:
 
-## Configuring the Editor
+    mupman ls
+
+Or:
+
+    mupman 5 crontab
+
+## Editing files
+
+You can edit the current file by clicking the "Edit" button. This will open
+it in your preferred editor.
 
 To configure which editor should be used, edit `~/.config/mup/mup.yaml` and add
 the following content:
