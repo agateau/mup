@@ -96,6 +96,14 @@ Optional tools (for external converters):
 
 Run `python setup.py install` as root.
 
+If you get this error : 
+ `Traceback (most recent call last):
+   File "setup.py", line 11, in <module>
+     from setuptools import setup
+ ImportError: No module named setuptools`
+
+Run `apt-get install python-setuptools` as root then try again.
+
 ## Contributing
 
 MUP is managed using the [lightweight project management policy][lpmp].
