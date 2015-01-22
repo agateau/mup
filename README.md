@@ -79,6 +79,7 @@ Mandatory Python modules:
 - PyQt4
 - yaml
 - pyxdg
+- setuptools
 
 Optional Python modules (for internal converters):
 
@@ -95,14 +96,6 @@ Optional tools (for external converters):
 ## Installation
 
 Run `python setup.py install` as root.
-
-If you get this error : 
- `Traceback (most recent call last):
-   File "setup.py", line 11, in <module>
-     from setuptools import setup
- ImportError: No module named setuptools`
-
-Run `apt-get install python-setuptools` as root then try again.
 
 ## Contributing
 
