@@ -1,3 +1,4 @@
+# encoding: utf-8
 import logging
 import os
 import subprocess
@@ -81,6 +82,18 @@ class Window(QMainWindow):
         action.setIcon(QIcon.fromTheme("document-edit"))
         action.setShortcut(Qt.CTRL + Qt.Key_E)
         action.triggered.connect(self.edit)
+
+        menu.addSeparator()
+
+        action = menu.addAction(self.tr("About MUP"))
+        action.triggered.connect(self.showAboutDialog)
+
+    def showAboutDialog(self):
+        title = self.tr("About MUP")
+        text = self.tr(u"<h2>MUP, a Markup Previewer</h2>"
+                u"<p>Aurélien Gâteau &ndash; <a href='mailto:mail@agateau.com'>mail@agateau.com</a></p>"
+                u"<p><a href='http://github.com/agateau/mup'>http://github.com/agateau/mup</a></p>")
+        QMessageBox.about(self, title, text)
 
     def setupView(self):
         self.view = View()
