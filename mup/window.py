@@ -44,15 +44,6 @@ class Window(QMainWindow):
         action.setShortcut(QKeySequence.Open)
         action.triggered.connect(self.openFileDialog)
 
-        action = toolBar.addAction(self.tr("Reload"))
-        action.setIcon(QIcon.fromTheme("view-refresh"))
-        action.setShortcut(QKeySequence.Refresh)
-        action.triggered.connect(self.reload)
-
-        action = toolBar.addAction(self.tr("Open with Editor"))
-        action.setIcon(QIcon.fromTheme("document-edit"))
-        action.triggered.connect(self.edit)
-
         self.converterComboBox = QComboBox()
         self.converterComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
         label = QLabel(self.tr("&Converter:"))
@@ -66,6 +57,30 @@ class Window(QMainWindow):
         toolBar.addWidget(widget)
         self.converterComboBox.currentIndexChanged.connect(self._onConverterChanged)
         self.converterComboBox.setFocusPolicy(Qt.ClickFocus)
+
+        action = toolBar.addAction(self.tr("Menu"))
+        action.setIcon(QIcon.fromTheme("applications-system"))
+        action.setToolTip(self.tr("Menu (F10)"))
+        action.setPriority(QAction.LowPriority)
+        self.setupMenu(action)
+        button = toolBar.widgetForAction(action)
+        button.setPopupMode(QToolButton.InstantPopup)
+        shortcut = QShortcut(Qt.Key_F10, self)
+        shortcut.activated.connect(button.animateClick)
+
+    def setupMenu(self, menuAction):
+        menu = QMenu()
+        menuAction.setMenu(menu)
+
+        action = menu.addAction(self.tr("Force Reload"))
+        action.setIcon(QIcon.fromTheme("view-refresh"))
+        action.setShortcut(QKeySequence.Refresh)
+        action.triggered.connect(self.reload)
+
+        action = menu.addAction(self.tr("Open with Editor"))
+        action.setIcon(QIcon.fromTheme("document-edit"))
+        action.setShortcut(Qt.CTRL + Qt.Key_E)
+        action.triggered.connect(self.edit)
 
     def setupView(self):
         self.view = View()
