@@ -28,7 +28,6 @@ class Window(QMainWindow):
 
         self.setupToolBar()
         self.setupView()
-        self.setCentralWidget(self.view)
         self.setWindowIcon(QIcon.fromTheme("text-plain"))
 
     def closeEvent(self, event):
@@ -99,6 +98,7 @@ class Window(QMainWindow):
         self.view = View()
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
+        self.setCentralWidget(self.view)
 
     def load(self, filename):
         if self.filename:
