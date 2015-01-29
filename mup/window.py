@@ -39,14 +39,8 @@ class Window(QMainWindow):
 
     def setupHistory(self):
         self._history = History()
-        self._backAction = QAction(self.tr("Back"), self)
-        self._backAction.triggered.connect(self._history.goBack)
-        self._forwardAction = QAction(self.tr("Forward"), self)
-        self._forwardAction.triggered.connect(self._history.goForward)
-        self._updateBackForwardActions()
         self._history.currentAboutToChange.connect(self._updateCurrentHistoryItemScrollPos)
         self._history.currentChanged.connect(self._loadCurrentHistoryItem)
-        self._history.currentChanged.connect(self._updateBackForwardActions)
 
     def setupToolBar(self):
         toolBar = self.addToolBar(self.tr("Main"))
@@ -59,8 +53,8 @@ class Window(QMainWindow):
         action.setShortcut(QKeySequence.Open)
         action.triggered.connect(self.openFileDialog)
 
-        toolBar.addAction(self._backAction)
-        toolBar.addAction(self._forwardAction)
+        toolBar.addAction(self._history.backAction)
+        toolBar.addAction(self._history.forwardAction)
 
         self.converterComboBox = QComboBox()
         self.converterComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
@@ -122,10 +116,6 @@ class Window(QMainWindow):
         item = self._history.current()
         if item:
             item.scrollPos = self.view.scrollPosition()
-
-    def _updateBackForwardActions(self):
-        self._backAction.setEnabled(self._history.canGoBack())
-        self._forwardAction.setEnabled(self._history.canGoForward())
 
     def load(self, filename):
         self._history.push(HistoryItem(filename, None))
