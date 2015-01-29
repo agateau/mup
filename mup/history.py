@@ -1,12 +1,17 @@
+import os
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
 class HistoryItem(object):
     def __init__(self, filename, converter, scrollPos=None):
-        self.filename = filename
+        self.filename = unicode(filename)
         self.converter = converter
         self.scrollPos = scrollPos
+
+    def __str__(self):
+        return os.path.basename(self.filename)
 
 
 class History(QObject):
@@ -61,5 +66,18 @@ class History(QObject):
         self.currentChanged.emit()
 
     def _updateBackForwardActions(self):
-        self.backAction.setEnabled(self._canGoBack())
-        self.forwardAction.setEnabled(self._canGoForward())
+        if self._canGoBack():
+            self.backAction.setEnabled(True)
+            item = self._lst[self._index - 1]
+            tip = self.tr("Go back to %1").arg(str(item))
+            self.backAction.setToolTip(tip)
+        else:
+            self.backAction.setEnabled(False)
+
+        if self._canGoForward():
+            self.forwardAction.setEnabled(True)
+            item = self._lst[self._index + 1]
+            tip = self.tr("Go to %1").arg(str(item))
+            self.forwardAction.setToolTip(tip)
+        else:
+            self.forwardAction.setEnabled(False)
