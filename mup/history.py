@@ -6,7 +6,7 @@ from PyQt4.QtGui import *
 
 class HistoryItem(object):
     def __init__(self, filename, converter, scrollPos=None):
-        self.filename = unicode(filename)
+        self.filename = os.path.abspath(unicode(filename))
         self.converter = converter
         self.scrollPos = scrollPos
 

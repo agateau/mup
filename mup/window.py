@@ -21,7 +21,6 @@ class Window(QMainWindow):
         QMainWindow.__init__(self)
 
         self.config = config.load()
-        self.filename = unicode()
         self.converterList = []
         converters.init()
 
@@ -40,6 +39,7 @@ class Window(QMainWindow):
     def setupHistory(self):
         self._history = History()
         self._history.currentAboutToChange.connect(self._updateCurrentHistoryItemScrollPos)
+        self._history.currentAboutToChange.connect(self._stopWatching)
         self._history.currentChanged.connect(self._loadCurrentHistoryItem)
 
     def setupToolBar(self):
@@ -120,21 +120,23 @@ class Window(QMainWindow):
     def load(self, filename):
         self._history.push(HistoryItem(filename, None))
 
+    def _stopWatching(self):
+        item = self._history.current()
+        if item:
+            self.watcher.removePath(item.filename)
+
     def _loadCurrentHistoryItem(self):
         item = self._history.current()
 
         # Update watcher
-        if self.filename:
-            self.watcher.removePath(self.filename)
-        self.filename = os.path.abspath(unicode(item.filename))
-        self.watcher.addPath(self.filename)
+        self.watcher.addPath(item.filename)
 
         # Update title
-        self.setWindowTitle(self.filename + " - MUP")
+        self.setWindowTitle(item.filename + " - MUP")
 
         # Find file to really show and update converter list
-        if os.path.exists(self.filename):
-            viewFilename = self.filename
+        if os.path.exists(item.filename):
+            viewFilename = item.filename
         else:
             viewFilename = resource_filename(__name__, "data/placeholder.html")
         self.converterList = converters.findConverters(viewFilename)
@@ -164,27 +166,24 @@ class Window(QMainWindow):
         self._updateCurrentHistoryItemScrollPos()
         self._loadCurrentHistoryItem()
 
-    def _onFileChanged(self, name):
-        if os.path.exists(self.filename):
-            self.watcher.addPath(self.filename)
+    def _onFileChanged(self):
+        item = self._history.current()
+        if os.path.exists(item.filename):
+            self.watcher.addPath(item.filename)
             self.reload()
         else:
-            self._scheduleCheck()
-
-    def _scheduleCheck(self):
-        if os.path.exists(self.filename):
-            self.watcher.addPath(self.filename)
-            self.reload()
-        else:
-            QTimer.singleShot(500, self._scheduleCheck)
+            QTimer.singleShot(500, self._onFileChanged)
 
     def reload(self):
         self._updateCurrentHistoryItemScrollPos()
         self.view.reload()
 
     def edit(self):
+        item = self._history.current()
+        if not item:
+            return
         editor = self.config.get("editor", "gvim")
-        subprocess.call([editor, self.filename])
+        subprocess.call([editor, item.filename])
 
     def handleInternalUrl(self, url):
         if url.path() == "create":
