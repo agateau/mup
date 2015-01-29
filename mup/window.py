@@ -13,6 +13,8 @@ from view import View
 
 import converters
 
+from history import History, HistoryItem
+
 
 class Window(QMainWindow):
     def __init__(self):
@@ -26,8 +28,15 @@ class Window(QMainWindow):
         self.watcher = QFileSystemWatcher(self)
         self.watcher.fileChanged.connect(self._onFileChanged)
 
-        self.setupToolBar()
+        self._history = History()
+        self._backAction = QAction(self.tr("Back"), self)
+        self._backAction.triggered.connect(self._goBack)
+        self._forwardAction = QAction(self.tr("Forward"), self)
+        self._forwardAction.triggered.connect(self._goForward)
+        self._updateBackForwardActions()
+
         self.setupView()
+        self.setupToolBar()
         self.setWindowIcon(QIcon.fromTheme("text-plain"))
 
     def closeEvent(self, event):
@@ -43,6 +52,9 @@ class Window(QMainWindow):
         action.setIcon(QIcon.fromTheme("document-open"))
         action.setShortcut(QKeySequence.Open)
         action.triggered.connect(self.openFileDialog)
+
+        toolBar.addAction(self._backAction)
+        toolBar.addAction(self._forwardAction)
 
         self.converterComboBox = QComboBox()
         self.converterComboBox.setSizeAdjustPolicy(QComboBox.AdjustToContents)
@@ -100,13 +112,46 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
         self.setCentralWidget(self.view)
 
+    def _goBack(self):
+        self._updateCurrentHistoryItemScrollPos()
+        self._history.goBack()
+        self._updateBackForwardActions()
+        self._loadCurrentHistoryItem()
+
+    def _goForward(self):
+        self._updateCurrentHistoryItemScrollPos()
+        self._history.goForward()
+        self._updateBackForwardActions()
+        self._loadCurrentHistoryItem()
+
+    def _updateCurrentHistoryItemScrollPos(self):
+        item = self._history.current()
+        if item:
+            item.scrollPos = self.view.scrollPosition()
+
+    def _updateBackForwardActions(self):
+        self._backAction.setEnabled(self._history.canGoBack())
+        self._forwardAction.setEnabled(self._history.canGoForward())
+
     def load(self, filename):
+        self._updateCurrentHistoryItemScrollPos()
+        self._history.push(HistoryItem(filename, None))
+        self._updateBackForwardActions()
+        self._loadCurrentHistoryItem()
+
+    def _loadCurrentHistoryItem(self):
+        item = self._history.current()
+
+        # Update watcher
         if self.filename:
             self.watcher.removePath(self.filename)
-        self.filename = os.path.abspath(unicode(filename))
+        self.filename = os.path.abspath(unicode(item.filename))
         self.watcher.addPath(self.filename)
+
+        # Update title
         self.setWindowTitle(self.filename + " - MUP")
 
+        # Find file to really show and update converter list
         if os.path.exists(self.filename):
             viewFilename = self.filename
         else:
@@ -116,18 +161,27 @@ class Window(QMainWindow):
             viewFilename = resource_filename(__name__, "data/unsupported.html")
             self.converterList = converters.findConverters(viewFilename)
         assert self.converterList
-        self.updateConverterComboBox()
-        self.view.load(viewFilename, self.converterList[0])
+        converter = item.converter or self.converterList[0]
+        self.updateConverterComboBox(currentConverter=converter)
 
-    def updateConverterComboBox(self):
+        # Update view
+        self.view.load(viewFilename, converter, item.scrollPos)
+
+    def updateConverterComboBox(self, currentConverter=None):
+        self.converterComboBox.blockSignals(True)
         self.converterComboBox.clear()
-        for converter in self.converterList:
+        for idx, converter in enumerate(self.converterList):
             self.converterComboBox.addItem(converter.name)
+            if converter == currentConverter:
+                self.converterComboBox.setCurrentIndex(idx)
+        self.converterComboBox.blockSignals(False)
 
     def _onConverterChanged(self, index):
         if index == -1:
             return
-        self.view.setConverter(self.converterList[index])
+        self._history.current().converter = self.converterList[index]
+        self._updateCurrentHistoryItemScrollPos()
+        self._loadCurrentHistoryItem()
 
     def _onFileChanged(self, name):
         if os.path.exists(self.filename):
@@ -144,6 +198,7 @@ class Window(QMainWindow):
             QTimer.singleShot(500, self._scheduleCheck)
 
     def reload(self):
+        self._updateCurrentHistoryItemScrollPos()
         self.view.reload()
 
     def edit(self):
