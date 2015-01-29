@@ -28,12 +28,7 @@ class Window(QMainWindow):
         self.watcher = QFileSystemWatcher(self)
         self.watcher.fileChanged.connect(self._onFileChanged)
 
-        self._history = History()
-        self._backAction = QAction(self.tr("Back"), self)
-        self._backAction.triggered.connect(self._goBack)
-        self._forwardAction = QAction(self.tr("Forward"), self)
-        self._forwardAction.triggered.connect(self._goForward)
-        self._updateBackForwardActions()
+        self.setupHistory()
 
         self.setupView()
         self.setupToolBar()
@@ -41,6 +36,17 @@ class Window(QMainWindow):
 
     def closeEvent(self, event):
         QMainWindow.closeEvent(self, event)
+
+    def setupHistory(self):
+        self._history = History()
+        self._backAction = QAction(self.tr("Back"), self)
+        self._backAction.triggered.connect(self._history.goBack)
+        self._forwardAction = QAction(self.tr("Forward"), self)
+        self._forwardAction.triggered.connect(self._history.goForward)
+        self._updateBackForwardActions()
+        self._history.currentAboutToChange.connect(self._updateCurrentHistoryItemScrollPos)
+        self._history.currentChanged.connect(self._loadCurrentHistoryItem)
+        self._history.currentChanged.connect(self._updateBackForwardActions)
 
     def setupToolBar(self):
         toolBar = self.addToolBar(self.tr("Main"))
@@ -112,18 +118,6 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
         self.setCentralWidget(self.view)
 
-    def _goBack(self):
-        self._updateCurrentHistoryItemScrollPos()
-        self._history.goBack()
-        self._updateBackForwardActions()
-        self._loadCurrentHistoryItem()
-
-    def _goForward(self):
-        self._updateCurrentHistoryItemScrollPos()
-        self._history.goForward()
-        self._updateBackForwardActions()
-        self._loadCurrentHistoryItem()
-
     def _updateCurrentHistoryItemScrollPos(self):
         item = self._history.current()
         if item:
@@ -134,10 +128,7 @@ class Window(QMainWindow):
         self._forwardAction.setEnabled(self._history.canGoForward())
 
     def load(self, filename):
-        self._updateCurrentHistoryItemScrollPos()
         self._history.push(HistoryItem(filename, None))
-        self._updateBackForwardActions()
-        self._loadCurrentHistoryItem()
 
     def _loadCurrentHistoryItem(self):
         item = self._history.current()
