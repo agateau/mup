@@ -11,9 +11,6 @@ from window import Window
 
 
 def main():
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    app = QApplication(sys.argv)
-
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', dest='verbose',
                         action='store_true', help='Enable debug output')
@@ -24,13 +21,19 @@ def main():
     logging.basicConfig(format='%(levelname)s: %(message)s',
                         level=loglevel)
 
+    return showMainWindow(args.markup_file)
+
+
+def showMainWindow(path):
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    app = QApplication(sys.argv)
+
     window = Window()
-    if args.markup_file:
-        window.load(args.markup_file)
+    if path:
+        window.load(path)
 
     window.show()
-    app.exec_()
-    return 0
+    return app.exec_()
 
 
 if __name__ == "__main__":

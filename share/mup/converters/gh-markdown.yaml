@@ -1,0 +1,3 @@
+name: GitHub Flavored Markdown (Official, via online API)
+cmd: mup-gh-markdown
+matches: ["*.md", "*.mkd", "*.markdown", "README"]

@@ -13,6 +13,7 @@ class View(QWidget):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
+
         self._thread = ConverterThread()
         self._thread.done.connect(self._setHtml)
 
@@ -32,6 +33,7 @@ class View(QWidget):
         page.linkClicked.connect(self._openUrl)
         page.linkHovered.connect(self._showHoveredLink)
         self._view.setPage(page)
+        self._view.loadFinished.connect(self._onLoadFinished)
 
     def _setupLinkLabel(self):
         self._linkLabel = QLabel(self._view)
@@ -49,31 +51,28 @@ class View(QWidget):
         self._linkLabelHideTimer.setInterval(250)
         self._linkLabelHideTimer.timeout.connect(self._linkLabel.hide)
 
-    def load(self, filename, converter):
+    def load(self, filename, converter, lastScrollPos=None):
+        self._lastScrollPos = lastScrollPos
         self._thread.setFilename(filename)
         self._thread.setConverter(converter)
 
     def reload(self):
+        self._lastScrollPos = self.scrollPosition()
         self._thread.reload()
 
-    def _setHtml(self, html):
-        frame = self._view.page().currentFrame()
-        self._lastScrollPos = frame.scrollPosition()
+    def scrollPosition(self):
+        return self._view.page().currentFrame().scrollPosition()
 
+    def _setHtml(self, html):
         filename = unicode(self._thread.filename())
         baseUrl = QUrl.fromLocalFile(filename)
-        self._view.loadFinished.connect(self._onLoadFinished)
         self._view.setHtml(html, baseUrl)
-
-    def setConverter(self, converter):
-        self._thread.setConverter(converter)
 
     def _onLoadFinished(self):
         if self._lastScrollPos is not None:
             frame = self._view.page().currentFrame()
             frame.setScrollPosition(self._lastScrollPos)
             self._lastScrollPos = None
-            self._view.loadFinished.disconnect(self._onLoadFinished)
 
     def _openUrl(self, url):
         if url.scheme() == "internal":
