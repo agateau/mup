@@ -3,6 +3,8 @@ from PyQt4.QtGui import *
 
 
 class FindWidget(QWidget):
+    escapePressed = pyqtSignal()
+
     def __init__(self, view, parent=None):
         QWidget.__init__(self, parent)
 
@@ -18,6 +20,7 @@ class FindWidget(QWidget):
         self._findTimer.timeout.connect(self._doFind)
 
         self._lineEdit.textEdited.connect(self._findTimer.start)
+        self._lineEdit.installEventFilter(self)
 
     def findNext(self):
         self._doFind()
@@ -30,3 +33,9 @@ class FindWidget(QWidget):
 
     def setFocus(self):
         self._lineEdit.setFocus()
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.KeyPress:
+            if event.key() == Qt.Key_Escape:
+                self.escapePressed.emit()
+        return False

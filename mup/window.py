@@ -99,7 +99,7 @@ class Window(QMainWindow):
 
         action = menu.addAction(self.tr("Find"))
         action.setShortcuts((Qt.CTRL + Qt.Key_F, Qt.Key_Slash))
-        action.triggered.connect(self.find)
+        action.triggered.connect(self.toggleFindWidget)
 
         action = menu.addAction(self.tr("Find Next"))
         action.setShortcut(Qt.Key_F3)
@@ -132,6 +132,7 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
         self._findWidget = FindWidget(self.view)
+        self._findWidget.escapePressed.connect(self.toggleFindWidget)
         self._findWidget.hide()
 
         vboxLayout.addWidget(self.view)
@@ -212,7 +213,7 @@ class Window(QMainWindow):
         editor = self.config.get("editor", "gvim")
         subprocess.call([editor, item.filename])
 
-    def find(self):
+    def toggleFindWidget(self):
         visible = not self._findWidget.isVisible()
         self._findWidget.setVisible(visible)
         if visible:
