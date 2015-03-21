@@ -96,6 +96,20 @@ class Window(QMainWindow):
 
         menu.addSeparator()
 
+        action = menu.addAction(self.tr("Find"))
+        action.setShortcut(Qt.CTRL + Qt.Key_F)
+        action.triggered.connect(self.find)
+
+        action = menu.addAction(self.tr("Find Next"))
+        action.setShortcut(Qt.Key_F3)
+        action.triggered.connect(self.findNext)
+
+        action = menu.addAction(self.tr("Find Previous"))
+        action.setShortcut(Qt.SHIFT + Qt.Key_F3)
+        action.triggered.connect(self.findPrevious)
+
+        menu.addSeparator()
+
         action = menu.addAction(self.tr("About MUP"))
         action.triggered.connect(self.showAboutDialog)
 
@@ -107,10 +121,28 @@ class Window(QMainWindow):
         QMessageBox.about(self, title, text)
 
     def setupView(self):
+        central = QWidget()
+        vboxLayout = QVBoxLayout(central)
+        vboxLayout.setMargin(0)
+        vboxLayout.setSpacing(0)
+
         self.view = View()
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
-        self.setCentralWidget(self.view)
+
+        self._findTimer = QTimer(self)
+        self._findTimer.setSingleShot(True)
+        self._findTimer.setInterval(100)
+        self._findTimer.timeout.connect(self.doFind)
+
+        self._findLineEdit = QLineEdit()
+        self._findLineEdit.hide()
+        self._findLineEdit.textEdited.connect(self._findTimer.start)
+
+        vboxLayout.addWidget(self.view)
+        vboxLayout.addWidget(self._findLineEdit)
+
+        self.setCentralWidget(central)
 
     def _updateCurrentHistoryItemScrollPos(self):
         item = self._history.current()
@@ -184,6 +216,21 @@ class Window(QMainWindow):
             return
         editor = self.config.get("editor", "gvim")
         subprocess.call([editor, item.filename])
+
+    def find(self):
+        visible = not self._findLineEdit.isVisible()
+        self._findLineEdit.setVisible(visible)
+        if visible:
+            self._findLineEdit.setFocus()
+
+    def findNext(self):
+        self.doFind()
+
+    def findPrevious(self):
+        self.view.find(self._findLineEdit.text(), backward=True)
+
+    def doFind(self):
+        self.view.find(self._findLineEdit.text())
 
     def handleInternalUrl(self, url):
         if url.path() == "create":
