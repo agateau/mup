@@ -98,7 +98,7 @@ class Window(QMainWindow):
         menu.addSeparator()
 
         action = menu.addAction(self.tr("Find"))
-        action.setShortcut(Qt.CTRL + Qt.Key_F)
+        action.setShortcuts((Qt.CTRL + Qt.Key_F, Qt.Key_Slash))
         action.triggered.connect(self.find)
 
         action = menu.addAction(self.tr("Find Next"))
