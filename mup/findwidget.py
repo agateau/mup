@@ -22,6 +22,10 @@ class FindWidget(QWidget):
         self._lineEdit.textEdited.connect(self._findTimer.start)
         self._lineEdit.installEventFilter(self)
 
+        self._notFoundPalette = QPalette(self._lineEdit.palette())
+        self._notFoundPalette.setColor(self._lineEdit.backgroundRole(),
+                                       QColor(255, 102, 102))
+
     def findNext(self):
         self._doFind()
 
@@ -29,7 +33,12 @@ class FindWidget(QWidget):
         self._view.find(self._lineEdit.text(), backward=True)
 
     def _doFind(self):
-        self._view.find(self._lineEdit.text())
+        text = self._lineEdit.text()
+        found = self._view.find(text)
+        if found or text.isEmpty():
+            self._lineEdit.setPalette(self.palette())
+        else:
+            self._lineEdit.setPalette(self._notFoundPalette)
 
     def setFocus(self):
         self._lineEdit.setFocus()
