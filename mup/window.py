@@ -99,6 +99,7 @@ class Window(QMainWindow):
 
         action = menu.addAction(self.tr("Find"))
         action.setShortcuts((Qt.CTRL + Qt.Key_F, Qt.Key_Slash))
+        action.setIcon(QIcon.fromTheme("edit-find"))
         action.triggered.connect(self.toggleFindWidget)
 
         action = menu.addAction(self.tr("Find Next"))
