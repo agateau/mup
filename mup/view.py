@@ -72,6 +72,10 @@ class View(QWidget):
         self._view.findText(text, options)
         return found
 
+    def removeFindHighlights(self):
+        options = QWebPage.HighlightAllOccurrences
+        self._view.findText(QString(), options)
+
     def scrollPosition(self):
         return self._view.page().currentFrame().scrollPosition()
 

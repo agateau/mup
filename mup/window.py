@@ -10,6 +10,7 @@ from PyQt4.QtGui import *
 
 import config
 from view import View
+from findwidget import FindWidget
 
 import converters
 
@@ -102,11 +103,11 @@ class Window(QMainWindow):
 
         action = menu.addAction(self.tr("Find Next"))
         action.setShortcut(Qt.Key_F3)
-        action.triggered.connect(self.findNext)
+        action.triggered.connect(self._findWidget.findNext)
 
         action = menu.addAction(self.tr("Find Previous"))
         action.setShortcut(Qt.SHIFT + Qt.Key_F3)
-        action.triggered.connect(self.findPrevious)
+        action.triggered.connect(self._findWidget.findPrevious)
 
         menu.addSeparator()
 
@@ -130,17 +131,11 @@ class Window(QMainWindow):
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
-        self._findTimer = QTimer(self)
-        self._findTimer.setSingleShot(True)
-        self._findTimer.setInterval(100)
-        self._findTimer.timeout.connect(self.doFind)
-
-        self._findLineEdit = QLineEdit()
-        self._findLineEdit.hide()
-        self._findLineEdit.textEdited.connect(self._findTimer.start)
+        self._findWidget = FindWidget(self.view)
+        self._findWidget.hide()
 
         vboxLayout.addWidget(self.view)
-        vboxLayout.addWidget(self._findLineEdit)
+        vboxLayout.addWidget(self._findWidget)
 
         self.setCentralWidget(central)
 
@@ -218,19 +213,12 @@ class Window(QMainWindow):
         subprocess.call([editor, item.filename])
 
     def find(self):
-        visible = not self._findLineEdit.isVisible()
-        self._findLineEdit.setVisible(visible)
+        visible = not self._findWidget.isVisible()
+        self._findWidget.setVisible(visible)
         if visible:
-            self._findLineEdit.setFocus()
-
-    def findNext(self):
-        self.doFind()
-
-    def findPrevious(self):
-        self.view.find(self._findLineEdit.text(), backward=True)
-
-    def doFind(self):
-        self.view.find(self._findLineEdit.text())
+            self._findWidget.setFocus()
+        else:
+            self.view.removeFindHighlights()
 
     def handleInternalUrl(self, url):
         if url.path() == "create":
