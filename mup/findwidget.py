@@ -7,6 +7,7 @@ class FindWidget(QWidget):
 
     def __init__(self, view, parent=None):
         QWidget.__init__(self, parent)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         self._view = view
 
