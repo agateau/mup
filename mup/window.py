@@ -218,7 +218,7 @@ class Window(QMainWindow):
         visible = not self._findWidget.isVisible()
         self._findWidget.setVisible(visible)
         if visible:
-            self._findWidget.setFocus()
+            self._findWidget.prepareNewSearch()
         else:
             self.view.removeFindHighlights()
 

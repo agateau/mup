@@ -41,7 +41,8 @@ class FindWidget(QWidget):
         else:
             self._lineEdit.setPalette(self._notFoundPalette)
 
-    def setFocus(self):
+    def prepareNewSearch(self):
+        self._lineEdit.clear()
         self._lineEdit.setFocus()
 
     def eventFilter(self, obj, event):
