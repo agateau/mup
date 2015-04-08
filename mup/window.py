@@ -10,6 +10,7 @@ from PyQt4.QtGui import *
 
 import config
 from view import View
+from findwidget import FindWidget
 
 import converters
 
@@ -96,6 +97,21 @@ class Window(QMainWindow):
 
         menu.addSeparator()
 
+        action = menu.addAction(self.tr("Find"))
+        action.setShortcuts((Qt.CTRL + Qt.Key_F, Qt.Key_Slash))
+        action.setIcon(QIcon.fromTheme("edit-find"))
+        action.triggered.connect(self.toggleFindWidget)
+
+        action = menu.addAction(self.tr("Find Next"))
+        action.setShortcut(Qt.Key_F3)
+        action.triggered.connect(self._findWidget.findNext)
+
+        action = menu.addAction(self.tr("Find Previous"))
+        action.setShortcut(Qt.SHIFT + Qt.Key_F3)
+        action.triggered.connect(self._findWidget.findPrevious)
+
+        menu.addSeparator()
+
         action = menu.addAction(self.tr("About MUP"))
         action.triggered.connect(self.showAboutDialog)
 
@@ -107,10 +123,23 @@ class Window(QMainWindow):
         QMessageBox.about(self, title, text)
 
     def setupView(self):
+        central = QWidget()
+        vboxLayout = QVBoxLayout(central)
+        vboxLayout.setMargin(0)
+        vboxLayout.setSpacing(0)
+
         self.view = View()
         self.view.loadRequested.connect(self.load)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
-        self.setCentralWidget(self.view)
+
+        self._findWidget = FindWidget(self.view)
+        self._findWidget.escapePressed.connect(self.toggleFindWidget)
+        self._findWidget.hide()
+
+        vboxLayout.addWidget(self.view)
+        vboxLayout.addWidget(self._findWidget)
+
+        self.setCentralWidget(central)
 
     def _updateCurrentHistoryItemScrollPos(self):
         item = self._history.current()
@@ -184,6 +213,14 @@ class Window(QMainWindow):
             return
         editor = self.config.get("editor", "gvim")
         subprocess.call([editor, item.filename])
+
+    def toggleFindWidget(self):
+        visible = not self._findWidget.isVisible()
+        self._findWidget.setVisible(visible)
+        if visible:
+            self._findWidget.prepareNewSearch()
+        else:
+            self.view.removeFindHighlights()
 
     def handleInternalUrl(self, url):
         if url.path() == "create":

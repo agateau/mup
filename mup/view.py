@@ -60,6 +60,22 @@ class View(QWidget):
         self._lastScrollPos = self.scrollPosition()
         self._thread.reload()
 
+    def find(self, text, backward=False):
+        options = QWebPage.FindWrapsAroundDocument
+        if backward:
+            options |= QWebPage.FindBackward
+        found = self._view.findText(text, options)
+
+        # Redo highlight
+        options = QWebPage.HighlightAllOccurrences
+        self._view.findText(QString(), options)
+        self._view.findText(text, options)
+        return found
+
+    def removeFindHighlights(self):
+        options = QWebPage.HighlightAllOccurrences
+        self._view.findText(QString(), options)
+
     def scrollPosition(self):
         return self._view.page().currentFrame().scrollPosition()
 
