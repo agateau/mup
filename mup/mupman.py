@@ -8,6 +8,8 @@ from main import showMainWindow
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--nofork', dest='foreground',
+                        action='store_true', help='Foreground: Do not fork at startup')
     parser.add_argument('section', nargs='?')
     parser.add_argument('page')
 
@@ -22,7 +24,7 @@ def main():
     except subprocess.CalledProcessError as exc:
         return 1
 
-    return showMainWindow(path)
+    return showMainWindow(path, foreground=args.foreground)
 
 
 if __name__ == '__main__':

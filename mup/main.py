@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import logging
+import os
 import signal
 import sys
 
@@ -13,7 +14,9 @@ from window import Window
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', dest='verbose',
-                        action='store_true', help='Enable debug output')
+                        action='store_true', help='Enable debug output. Implies --nofork')
+    parser.add_argument('-f', '--nofork', dest='foreground',
+                        action='store_true', help='Foreground: Do not fork at startup')
     parser.add_argument('markup_file', nargs='?')
     args = parser.parse_args()
 
@@ -21,10 +24,21 @@ def main():
     logging.basicConfig(format='%(levelname)s: %(message)s',
                         level=loglevel)
 
-    return showMainWindow(args.markup_file)
+    if args.verbose:
+        args.foreground = True
+
+    return showMainWindow(args.markup_file, foreground=args.foreground)
 
 
-def showMainWindow(path):
+def showMainWindow(path, foreground=False):
+    if not foreground:
+        # Close stdout and stderr to avoid polluting the terminal
+        os.close(1)
+        os.close(2)
+
+        if os.fork() > 0:
+            return
+
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     app = QApplication(sys.argv)
 
