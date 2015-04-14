@@ -1,9 +1,18 @@
+# coding: utf-8
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 
+def _createArrowButton(arrowType, toolTip):
+    button = QToolButton()
+    button.setArrowType(arrowType)
+    button.setAutoRaise(True)
+    button.setToolTip(toolTip)
+    return button
+
+
 class FindWidget(QWidget):
-    escapePressed = pyqtSignal()
+    closeRequested = pyqtSignal()
 
     def __init__(self, view, parent=None):
         QWidget.__init__(self, parent)
@@ -12,8 +21,25 @@ class FindWidget(QWidget):
         self._view = view
 
         layout = QHBoxLayout(self)
+        layout.setMargin(0)
         self._lineEdit = QLineEdit()
+
+        self._previousButton = _createArrowButton(Qt.UpArrow, self.tr("Previous"))
+        self._previousButton.clicked.connect(self.findPrevious)
+
+        self._nextButton = _createArrowButton(Qt.DownArrow, self.tr("Next"))
+        self._nextButton.clicked.connect(self.findNext)
+
+        self._closeButton = QToolButton()
+        self._closeButton.setAutoRaise(True)
+        self._closeButton.setText(u"⨯")
+        self._closeButton.setToolTip(self.tr("Close"))
+        self._closeButton.clicked.connect(self.closeRequested)
+
         layout.addWidget(self._lineEdit)
+        layout.addWidget(self._previousButton)
+        layout.addWidget(self._nextButton)
+        layout.addWidget(self._closeButton)
 
         self._findTimer = QTimer(self)
         self._findTimer.setSingleShot(True)
@@ -48,5 +74,5 @@ class FindWidget(QWidget):
     def eventFilter(self, obj, event):
         if event.type() == QEvent.KeyPress:
             if event.key() == Qt.Key_Escape:
-                self.escapePressed.emit()
+                self.closeRequested.emit()
         return False

@@ -133,7 +133,7 @@ class Window(QMainWindow):
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
         self._findWidget = FindWidget(self.view)
-        self._findWidget.escapePressed.connect(self.toggleFindWidget)
+        self._findWidget.closeRequested.connect(self.toggleFindWidget)
         self._findWidget.hide()
 
         vboxLayout.addWidget(self.view)
