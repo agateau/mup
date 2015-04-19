@@ -1,9 +1,8 @@
 from StringIO import StringIO
 from unittest import TestCase
 
-from mup.converters import converter
 from mup.converters.converter import Converter
-from mup.converters.utils import selectBestConverter
+from mup.converters.utils import selectBestConverter, skipHeader, readFile
 
 class ConvertersTestCase(TestCase):
     def testSkipHeader(self):
@@ -13,7 +12,7 @@ class ConvertersTestCase(TestCase):
             ("Plain text", "Plain text"),
             ]
         for src, expected in data:
-            dst = converter._skipHeader(src)
+            dst = skipHeader(src)
             self.assertEquals(dst, expected)
 
     def testReadFile(self):
@@ -24,7 +23,7 @@ class ConvertersTestCase(TestCase):
 
         for src, expected in data:
             fl = StringIO(src)
-            dst = converter._readFile(fl)
+            dst = readFile(fl)
             self.assertEquals(dst, expected)
 
     def testSelectBestConverter(self):
