@@ -15,7 +15,7 @@ import mup
 DESCRIPTION = "Markup previewer"
 
 CONVERTERS_DIR = 'share/mup/converters'
-CONVERTERS = [os.path.join(CONVERTERS_DIR, x) for x in os.listdir(CONVERTERS_DIR)]
+CONVERTERS = [os.path.join(CONVERTERS_DIR, x) for x in os.listdir(CONVERTERS_DIR) if x.endswith(".yaml")]
 
 setup(name=mup.__appname__,
     version=mup.__version__,
