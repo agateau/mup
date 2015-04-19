@@ -60,6 +60,11 @@ def _readFile(fl):
 
 class Converter(object):
     name = 'Unnamed'
+    # Set to True if this converter wraps the reference implementation for the
+    # markup it supports
+    reference = False
+    # Set to True if this converter uses online tools
+    online = False
 
     def supports(self, filepath):
         raise NotImplementedError

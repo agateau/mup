@@ -2,6 +2,8 @@ from StringIO import StringIO
 from unittest import TestCase
 
 from mup.converters import converter
+from mup.converters.converter import Converter
+from mup.converters.utils import selectBestConverter
 
 class ConvertersTestCase(TestCase):
     def testSkipHeader(self):
@@ -24,3 +26,17 @@ class ConvertersTestCase(TestCase):
             fl = StringIO(src)
             dst = converter._readFile(fl)
             self.assertEquals(dst, expected)
+
+    def testSelectBestConverter(self):
+        def mkconverter(online=False, reference=False):
+            converter = Converter()
+            converter.online = online
+            converter.reference = reference
+            return converter
+
+        online = mkconverter(online=True)
+        reference = mkconverter(reference=True)
+        normal = mkconverter()
+
+        self.assertEquals(selectBestConverter([online, reference, normal]), reference)
+        self.assertEquals(selectBestConverter([online, normal]), normal)

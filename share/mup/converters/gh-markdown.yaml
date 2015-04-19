@@ -1,3 +1,4 @@
-name: GitHub Markdown (Online API)
+name: GitHub Markdown (via github.com)
 cmd: mup-gh-markdown
 matches: ["*.md", "*.mkd", "*.markdown", "README"]
+online: true
