@@ -12,7 +12,7 @@ import sys
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', default='markdown')
+    parser.add_argument('--mode', default='markdown', choices=['markdown', 'gfm'])
     args = parser.parse_args()
 
     payload = {
