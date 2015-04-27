@@ -2,3 +2,4 @@ name: Ronn
 cmd: ronn
 args: --pipe --fragment
 matches: ["*.ronn"]
+reference: true

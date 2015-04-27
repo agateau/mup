@@ -13,6 +13,7 @@ from view import View
 from findwidget import FindWidget
 
 import converters
+from converters.utils import selectBestConverter
 
 from history import History, HistoryItem
 
@@ -173,7 +174,7 @@ class Window(QMainWindow):
             viewFilename = resource_filename(__name__, "data/unsupported.html")
             self.converterList = converters.findConverters(viewFilename)
         assert self.converterList
-        converter = item.converter or self.converterList[0]
+        converter = item.converter or selectBestConverter(self.converterList)
         self.updateConverterComboBox(currentConverter=converter)
 
         # Update view

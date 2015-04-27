@@ -7,6 +7,7 @@ from converter import Converter
 
 class RstConverter(Converter):
     name = "RST"
+    reference = True
 
     def _doConvert(self, txt):
         return docutils.core.publish_string(txt, writer_name="html")

@@ -3,3 +3,4 @@ cmd: asciidoc
 args: --out-file - -
 full: true
 matches: ["*.txt"]
+reference: true

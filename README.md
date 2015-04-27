@@ -80,6 +80,11 @@ Other optional keys:
 - `args`: Arguments to pass to the command
 - `full`: Set to true if the command creates a complete HTML document, not just
   an HTML snippet (defaults to false)
+- `online`: Set to true if the converter uses an online service. Those are
+  slower than offline ones and are thus not selected by default
+- `reference`: Set to true if the converter is the reference implementation for
+  the format it handles. A reference converter will be selected by default if
+  available
 
 # Requirements
 

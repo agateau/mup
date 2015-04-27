@@ -44,6 +44,8 @@ def init():
         logging.info('Failed to load internal rST converter, skipping.')
 
     _converters.append(HtmlConverter())
+
+    _converters.sort(key=lambda x: x.name)
     return _converters
 
 

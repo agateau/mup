@@ -12,7 +12,7 @@ import sys
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', default='markdown')
+    parser.add_argument('--mode', default='markdown', choices=['markdown', 'gfm'])
     args = parser.parse_args()
 
     payload = {
@@ -25,11 +25,12 @@ def main():
     rs = requests.post('https://api.github.com/markdown',
             data=json.dumps(payload), headers=headers)
 
+    text = rs.text.encode('utf-8')
     if rs.status_code == 200:
-        print(rs.text)
+        print(text)
         return 0
     else:
-        print(rs.text, file=sys.stderr)
+        print(text, file=sys.stderr)
         return rs.status_code
 
 
