@@ -37,6 +37,7 @@ setup(name=mup.__appname__,
     entry_points={
         "console_scripts": [
             "mup-gh-markdown = mup.converters.ghmarkdown:main",
+            "mup-man = mup.converters.man:main",
         ],
         "gui_scripts": [
             "mup = mup.main:main",
