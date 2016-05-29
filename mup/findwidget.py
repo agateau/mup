@@ -1,6 +1,7 @@
 # coding: utf-8
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 
 def _createArrowButton(arrowType, toolTip):
@@ -21,7 +22,7 @@ class FindWidget(QWidget):
         self._view = view
 
         layout = QHBoxLayout(self)
-        layout.setMargin(0)
+        layout.setContentsMargins(QMargins())
         self._lineEdit = QLineEdit()
 
         self._previousButton = _createArrowButton(Qt.UpArrow, self.tr("Previous"))

@@ -5,8 +5,9 @@ import subprocess
 
 from pkg_resources import resource_filename
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 import config
 from view import View
@@ -126,7 +127,7 @@ class Window(QMainWindow):
     def setupView(self):
         central = QWidget()
         vboxLayout = QVBoxLayout(central)
-        vboxLayout.setMargin(0)
+        vboxLayout.setContentsMargins(QMargins())
         vboxLayout.setSpacing(0)
 
         self.view = View()
@@ -230,7 +231,7 @@ class Window(QMainWindow):
             logging.error("Don't know how to handle internal url {}".format(url.toString()))
 
     def openFileDialog(self):
-        name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))
+        name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))[0]
         if not name:
             return
         self.load(name)

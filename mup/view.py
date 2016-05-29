@@ -1,6 +1,8 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWebKit import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKitWidgets import *
 
 import converters
 
@@ -9,7 +11,7 @@ from converterthread import ConverterThread
 
 class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)
-    loadRequested = pyqtSignal(QString)
+    loadRequested = pyqtSignal(str)
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -21,7 +23,7 @@ class View(QWidget):
         self._setupLinkLabel()
 
         layout = QHBoxLayout(self)
-        layout.setMargin(0)
+        layout.setContentsMargins(QMargins())
         layout.addWidget(self._view)
 
         self._lastScrollPos = None
@@ -68,13 +70,13 @@ class View(QWidget):
 
         # Redo highlight
         options = QWebPage.HighlightAllOccurrences
-        self._view.findText(QString(), options)
+        self._view.findText("", options)
         self._view.findText(text, options)
         return found
 
     def removeFindHighlights(self):
         options = QWebPage.HighlightAllOccurrences
-        self._view.findText(QString(), options)
+        self._view.findText("", options)
 
     def scrollPosition(self):
         return self._view.page().currentFrame().scrollPosition()
