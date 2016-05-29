@@ -1,5 +1,5 @@
 name: Man
-cmd: groff
-args: -K utf-8 -mandoc -Thtml
+cmd: mup-man
+args:
 full: true
 matches: ["*.[1-9]"]
