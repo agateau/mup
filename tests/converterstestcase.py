@@ -1,4 +1,4 @@
-from StringIO import StringIO
+from io import BytesIO
 from unittest import TestCase
 
 from mup.converters.converter import Converter
@@ -13,18 +13,18 @@ class ConvertersTestCase(TestCase):
             ]
         for src, expected in data:
             dst = skipHeader(src)
-            self.assertEquals(dst, expected)
+            self.assertEqual(dst, expected)
 
     def testReadFile(self):
         data = [
-            ("\xef\xbb\xbfFoo", u"Foo"),
-            ("Bar", u"Bar"),
+            (b"\xef\xbb\xbfFoo", "Foo"),
+            (b"Bar", "Bar"),
             ]
 
         for src, expected in data:
-            fl = StringIO(src)
+            fl = BytesIO(src)
             dst = readFile(fl)
-            self.assertEquals(dst, expected)
+            self.assertEqual(dst, expected)
 
     def testSelectBestConverter(self):
         def mkconverter(online=False, reference=False):
@@ -37,5 +37,5 @@ class ConvertersTestCase(TestCase):
         reference = mkconverter(reference=True)
         normal = mkconverter()
 
-        self.assertEquals(selectBestConverter([online, reference, normal]), reference)
-        self.assertEquals(selectBestConverter([online, normal]), normal)
+        self.assertEqual(selectBestConverter([online, reference, normal]), reference)
+        self.assertEqual(selectBestConverter([online, normal]), normal)

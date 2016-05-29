@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
 import subprocess
 import sys
 
-from main import showMainWindow
+from mup.main import showMainWindow
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
         cmd.append(args.section)
     cmd.append(args.page)
     try:
-        path = subprocess.check_output(cmd).strip()
+        path = subprocess.check_output(cmd).strip().decode('utf-8')
     except subprocess.CalledProcessError as exc:
         return 1
 

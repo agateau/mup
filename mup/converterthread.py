@@ -37,7 +37,7 @@ class ConverterThread(QThread):
 
     def run(self):
         with QMutexLocker(self._mutex):
-            filename = unicode(self._filename)
+            filename = str(self._filename)
             if os.path.exists(filename) and self._converter is not None:
                 html = self._converter.convert(self._filename)
             else:

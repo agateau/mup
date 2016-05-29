@@ -2,8 +2,8 @@ import fnmatch
 
 import markdown
 
-from converter import Converter
-from utils import applyTemplate
+from .converter import Converter
+from .utils import applyTemplate
 
 
 class MarkdownConverter(Converter):

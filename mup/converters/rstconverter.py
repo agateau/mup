@@ -2,7 +2,7 @@ import os
 
 import docutils.core
 
-from converter import Converter
+from .converter import Converter
 
 
 class RstConverter(Converter):

@@ -1,6 +1,6 @@
 import os
 
-from converter import Converter
+from .converter import Converter
 
 
 class HtmlConverter(Converter):

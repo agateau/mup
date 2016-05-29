@@ -33,7 +33,7 @@ class FindWidget(QWidget):
 
         self._closeButton = QToolButton()
         self._closeButton.setAutoRaise(True)
-        self._closeButton.setText(u"⨯")
+        self._closeButton.setText("⨯")
         self._closeButton.setToolTip(self.tr("Close"))
         self._closeButton.clicked.connect(self.closeRequested)
 

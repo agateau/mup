@@ -4,9 +4,9 @@ from PyQt5.QtWebKit import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebKitWidgets import *
 
-import converters
+from . import converters
 
-from converterthread import ConverterThread
+from .converterthread import ConverterThread
 
 
 class View(QWidget):
@@ -82,7 +82,7 @@ class View(QWidget):
         return self._view.page().currentFrame().scrollPosition()
 
     def _setHtml(self, html):
-        filename = unicode(self._thread.filename())
+        filename = str(self._thread.filename())
         baseUrl = QUrl.fromLocalFile(filename)
         self._view.setHtml(html, baseUrl)
 
@@ -103,7 +103,7 @@ class View(QWidget):
                 anchor = url.fragment()
                 frame.scrollToAnchor(anchor)
                 return
-            elif converters.findConverters(unicode(url.path())):
+            elif converters.findConverters(str(url.path())):
                 self.loadRequested.emit(url.path())
                 return
 
