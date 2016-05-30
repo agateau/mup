@@ -90,7 +90,7 @@ Other optional keys:
 
 Mandatory Python modules:
 
-- PyQt4
+- PyQt5 (including PyQt5 WebKit, which can be in a separate package)
 - yaml
 - pyxdg
 
@@ -108,7 +108,7 @@ Optional tools (for external converters):
 
 ## Installation
 
-Run `python setup.py install` as root.
+Run `./setup.py install` as root.
 
 ## Contributing
 
