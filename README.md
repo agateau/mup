@@ -4,7 +4,7 @@ MUP is a markup previewer. It supports multiple markup formats. You can use it
 to read markup text, but it is also useful when writing markup text to check
 how your work looks, thanks to its refresh-as-you-save feature.
 
-![MUP in action](http://agateau.com/hotlink/mup.png)
+![MUP in action](screenshot.png)
 
 ## Features
 
@@ -23,19 +23,17 @@ MUP supports Markdown and reStructuredText using Python modules.
 
 It also supports the following formats using external converters:
 
-- Markdown via Pandoc
-- GitHub Flavored Markdown via Kramdown
-- CommonMark
-- Gruber Markdown
+- Markdown
+- GitHub Flavored Markdown
 - Ronn
-- Man pages via groff
+- Man pages
 - Asciidoc
 
 External converters are command line tools which are invoked by MUP to convert
 input files. To be used as an external converter, the tool must accept markup
-on stdin and produces HTML on stdout.
+on stdin and produce HTML on stdout.
 
-# Usage
+## Usage
 
 Start MUP like this:
 
@@ -49,10 +47,80 @@ Or:
 
     mupman 5 crontab
 
+## Requirements
+
+Mup requires Python 3 and the following Python modules:
+
+- [PyQt5][], including PyQt5 WebKit, which can be in a separate package
+- [PyYAML][]
+- [PyXDG][]
+
+It can make use of other Python modules and external tools to render various
+markup formats.
+
+[PyQt5]: https://www.riverbankcomputing.com/software/pyqt/download5
+[PyYAML]: http://pyyaml.org/wiki/PyYAML
+[PyXDG]: https://freedesktop.org/wiki/Software/pyxdg/
+
+### Markdown
+
+For Markdown you need to install one of these:
+
+- Python [Markdown][python-markdown] module
+- [Pandoc][]
+- [CommonMark][]
+- [Gruber Markdown][Gruber]
+- Python [Requests][requests] module: to render Markdown using GitHub Rest API
+  (slow but accurate)
+
+### GitHub Flavored Markdown (GFM)
+
+For GitHub Flavored Markdown (Markdown which takes newlines into account) you
+need to install one of these:
+
+- [kramdown][]
+- Python [Requests][requests] module: to render GFM using GitHub Rest API (slow
+  but accurate)
+
+### reStructuredText
+
+For reStructuredText you need to install the [docutils][] Python module.
+
+### Man pages
+
+For man pages you need to install [Groff][] (but it is already installed on
+most Linux distributions).
+
+### Ronn
+
+For Ronn you need to install [Ronn][].
+
+### Asciidoc
+
+For Asciidoc you need to install [Asciidoc][].
+
+[python-markdown]: https://pythonhosted.org/Markdown/
+[Pandoc]: http://pandoc.org
+[kramdown]: http://kramdown.gettalong.org/
+[CommonMark]: http://commonmark.org
+[Gruber]: http://daringfireball.net/projects/markdown/
+
+[docutils]: http://docutils.sourceforge.net/
+
+[Groff]: https://www.gnu.org/software/groff/
+
+[Ronn]: https://www.mankier.com/1/ronn
+[Asciidoc]: http://www.methods.co.nz/asciidoc/
+[Requests]: http://python-requests.org
+
+## Installation
+
+Run `./setup.py install` as root.
+
 ## Editing files
 
-You can edit the current file by clicking the "Edit" button. This will open
-it in your preferred editor.
+You can edit the current file by clicking on the menu button then select "Open
+with Editor". This will open the file in the configured editor.
 
 To configure which editor should be used, edit `~/.config/mup/mup.yaml` and add
 the following content:
@@ -85,30 +153,6 @@ Other optional keys:
 - `reference`: Set to true if the converter is the reference implementation for
   the format it handles. A reference converter will be selected by default if
   available
-
-# Requirements
-
-Mandatory Python modules:
-
-- PyQt5 (including PyQt5 WebKit, which can be in a separate package)
-- yaml
-- pyxdg
-
-Optional Python modules (for internal converters):
-
-- markdown
-- docutils
-
-Optional tools (for external converters):
-
-- pandoc
-- ronn
-- groff, for man pages
-- asciidoc
-
-## Installation
-
-Run `./setup.py install` as root.
 
 ## Contributing
 
