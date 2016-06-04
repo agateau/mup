@@ -18,9 +18,9 @@ class Converter(object):
     def convert(self, filename):
         ext = os.path.splitext(filename)[1]
         if ext == '.gz':
-            fl = gzip.open(filename)
+            fl = gzip.open(filename, 'rb')
         else:
-            fl = open(filename)
+            fl = open(filename, 'rb')
         src = readFile(fl)
 
         src = skipHeader(src)

@@ -6,7 +6,7 @@ VENV_DIR=/tmp/mupinst
 cd /tmp
 rm -rf $VENV_DIR
 echo "######## Creating env"
-virtualenv --system-site-packages $VENV_DIR
+virtualenv --python=python3 --system-site-packages $VENV_DIR
 
 echo "######## Activating env"
 . $VENV_DIR/bin/activate

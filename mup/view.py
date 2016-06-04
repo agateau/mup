@@ -1,15 +1,17 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWebKit import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKitWidgets import *
 
-import converters
+from . import converters
 
-from converterthread import ConverterThread
+from .converterthread import ConverterThread
 
 
 class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)
-    loadRequested = pyqtSignal(QString)
+    loadRequested = pyqtSignal(str)
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -21,7 +23,7 @@ class View(QWidget):
         self._setupLinkLabel()
 
         layout = QHBoxLayout(self)
-        layout.setMargin(0)
+        layout.setContentsMargins(QMargins())
         layout.addWidget(self._view)
 
         self._lastScrollPos = None
@@ -68,19 +70,19 @@ class View(QWidget):
 
         # Redo highlight
         options = QWebPage.HighlightAllOccurrences
-        self._view.findText(QString(), options)
+        self._view.findText("", options)
         self._view.findText(text, options)
         return found
 
     def removeFindHighlights(self):
         options = QWebPage.HighlightAllOccurrences
-        self._view.findText(QString(), options)
+        self._view.findText("", options)
 
     def scrollPosition(self):
         return self._view.page().currentFrame().scrollPosition()
 
     def _setHtml(self, html):
-        filename = unicode(self._thread.filename())
+        filename = str(self._thread.filename())
         baseUrl = QUrl.fromLocalFile(filename)
         self._view.setHtml(html, baseUrl)
 
@@ -101,7 +103,7 @@ class View(QWidget):
                 anchor = url.fragment()
                 frame.scrollToAnchor(anchor)
                 return
-            elif converters.findConverters(unicode(url.path())):
+            elif converters.findConverters(str(url.path())):
                 self.loadRequested.emit(url.path())
                 return
 

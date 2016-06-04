@@ -17,7 +17,7 @@ _template = None
 def applyTemplate(html):
     global _template
     if _template is None:
-        _template = resource_string("mup", "data/template.html")
+        _template = resource_string("mup", "data/template.html").decode("utf-8")
     return _template.replace("%content%", html)
 
 
@@ -52,7 +52,7 @@ def readFile(fl):
     try:
         raw = fl.read()
         encoding = _detectEncoding(raw, 'utf-8')
-        return unicode(raw, encoding)
+        return str(raw, encoding)
     finally:
         fl.close()
 

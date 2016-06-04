@@ -3,8 +3,8 @@ import logging
 
 from xdg import BaseDirectory
 
-from htmlconverter import HtmlConverter
-from processconverter import ProcessConverter
+from .htmlconverter import HtmlConverter
+from .processconverter import ProcessConverter
 
 
 _converters = []
@@ -32,13 +32,13 @@ def init():
         _converters.extend(_loadConvertersFromDir(convertersDir))
 
     try:
-        from markdownconverter import MarkdownConverter
+        from .markdownconverter import MarkdownConverter
         _converters.append(MarkdownConverter())
     except ImportError:
         logging.info('Failed to load internal Markdown converter, skipping.')
 
     try:
-        from rstconverter import RstConverter
+        from .rstconverter import RstConverter
         _converters.append(RstConverter())
     except ImportError:
         logging.info('Failed to load internal rST converter, skipping.')

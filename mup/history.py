@@ -1,12 +1,13 @@
 import os
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 
 class HistoryItem(object):
     def __init__(self, filename, converter, scrollPos=None):
-        self.filename = os.path.abspath(unicode(filename))
+        self.filename = os.path.abspath(str(filename))
         self.converter = converter
         self.scrollPos = scrollPos
 

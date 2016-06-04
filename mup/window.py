@@ -5,17 +5,18 @@ import subprocess
 
 from pkg_resources import resource_filename
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
-import config
-from view import View
-from findwidget import FindWidget
+from . import config
+from .view import View
+from .findwidget import FindWidget
 
-import converters
-from converters.utils import selectBestConverter
+from . import converters
+from .converters.utils import selectBestConverter
 
-from history import History, HistoryItem
+from .history import History, HistoryItem
 
 
 class Window(QMainWindow):
@@ -118,15 +119,15 @@ class Window(QMainWindow):
 
     def showAboutDialog(self):
         title = self.tr("About MUP")
-        text = self.tr(u"<h2>MUP, a Markup Previewer</h2>"
-                u"<p>Aurélien Gâteau &ndash; <a href='mailto:mail@agateau.com'>mail@agateau.com</a></p>"
-                u"<p><a href='http://github.com/agateau/mup'>http://github.com/agateau/mup</a></p>")
+        text = self.tr("<h2>MUP, a Markup Previewer</h2>"
+                "<p>Aurélien Gâteau &ndash; <a href='mailto:mail@agateau.com'>mail@agateau.com</a></p>"
+                "<p><a href='http://github.com/agateau/mup'>http://github.com/agateau/mup</a></p>")
         QMessageBox.about(self, title, text)
 
     def setupView(self):
         central = QWidget()
         vboxLayout = QVBoxLayout(central)
-        vboxLayout.setMargin(0)
+        vboxLayout.setContentsMargins(QMargins())
         vboxLayout.setSpacing(0)
 
         self.view = View()
@@ -230,7 +231,7 @@ class Window(QMainWindow):
             logging.error("Don't know how to handle internal url {}".format(url.toString()))
 
     def openFileDialog(self):
-        name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))
+        name = QFileDialog.getOpenFileName(self, self.tr("Select a file to view"))[0]
         if not name:
             return
         self.load(name)

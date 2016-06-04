@@ -5,8 +5,8 @@ import subprocess
 
 import yaml
 
-from converter import Converter
-from utils import applyTemplate
+from .converter import Converter
+from .utils import applyTemplate
 
 
 class ProcessConverter(Converter):

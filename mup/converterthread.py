@@ -1,10 +1,10 @@
 import os
 
-from PyQt4.QtCore import *
+from PyQt5.QtCore import *
 
 
 class ConverterThread(QThread):
-    done = pyqtSignal(QString)
+    done = pyqtSignal(str)
 
     def __init__(self, parent=None):
         super(ConverterThread, self).__init__(parent)
@@ -37,7 +37,7 @@ class ConverterThread(QThread):
 
     def run(self):
         with QMutexLocker(self._mutex):
-            filename = unicode(self._filename)
+            filename = str(self._filename)
             if os.path.exists(filename) and self._converter is not None:
                 html = self._converter.convert(self._filename)
             else:
