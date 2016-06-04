@@ -5,7 +5,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
 
-from converterstestcase import *
+from .converterstestcase import *
 
 def main():
     unittest.main()
