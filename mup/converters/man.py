@@ -45,9 +45,10 @@ def main():
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
-    popen = subprocess.Popen(CMD, stdin=subprocess.PIPE,
+    popen = subprocess.Popen(CMD, stdin=sys.stdin,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = popen.communicate(sys.stdin.read())
+    stdout, stderr = popen.communicate()
+    stdout = stdout.decode('utf-8')
 
     # Turn '&minus' back into '-' so that options (-f, --quiet...) are easier to
     # search
