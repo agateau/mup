@@ -53,5 +53,5 @@ class ProcessConverter(Converter):
         if not self._full:
             html = applyTemplate(html)
         if stderr:
-            logging.error(stderr)
+            logging.error(stderr.decode('utf-8', errors='replace'))
         return html
