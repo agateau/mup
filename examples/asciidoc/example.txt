@@ -1,0 +1,41 @@
+[[a-top-level-header]]
+A top-level header
+------------------
+
+Paragraphs are separated by a blank line.
+
+2nd paragraph. _Italic_, *bold*, and `monospace`.
+
+Itemized lists look like:
+
+* this one
+* that one
+* the other one
+
+[[a-second-level-header]]
+A second-level header
+~~~~~~~~~~~~~~~~~~~~~
+
+Here is a numbered list:
+
+1.  first item
+2.  second item
+3.  third item
+
+Some source code:
+
+-------------------------------
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
+    printf("Hello World\n");
+    return 0;
+}
+-------------------------------
+
+A quote:
+
+____________________________________________
+With great power comes great responsibility.
+____________________________________________

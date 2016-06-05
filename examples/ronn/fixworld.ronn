@@ -1,0 +1,15 @@
+fixworld(1) -- fix what's wrong in the world
+============================================
+
+## SYNOPSIS
+
+`fixworld` [-i] [--interactive]
+
+## DESCRIPTION
+
+**fixworld** fixes everything that is wrong in this world.
+
+## OPTIONS
+
+* `-i`, `--interactive`:
+  Ask for confirmation before fixing anything wrong. Can take a lot of time.
