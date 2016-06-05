@@ -109,7 +109,7 @@ For Asciidoc you need to install [Asciidoc][].
 
 [Groff]: https://www.gnu.org/software/groff/
 
-[Ronn]: https://www.mankier.com/1/ronn
+[Ronn]: http://rtomayko.github.io/ronn/
 [Asciidoc]: http://www.methods.co.nz/asciidoc/
 [Requests]: http://python-requests.org
 
