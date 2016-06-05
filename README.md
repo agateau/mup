@@ -49,7 +49,7 @@ Or:
 
 ## Requirements
 
-Mup requires Python 3 and the following Python modules:
+MUP requires Python 3 and the following Python modules:
 
 - [PyQt5][], including PyQt5 WebKit, which can be in a separate package
 - [PyYAML][]
