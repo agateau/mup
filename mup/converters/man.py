@@ -5,7 +5,10 @@ import subprocess
 import sys
 
 
-CMD = ['groff', '-K', 'utf-8', '-mandoc', '-Thtml']
+CMD = ['groff',
+    '-P', '-r', # No hr at the end of the page
+    '-K', 'utf-8',
+    '-mandoc', '-Thtml']
 
 NAME_RE = r'([-_.a-zA-Z0-9]+)'
 SECTION_RE = r'\((\d+[px]?)\)'
