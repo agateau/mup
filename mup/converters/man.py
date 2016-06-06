@@ -40,7 +40,7 @@ def process_links(html, find_man_page_fcn):
         if path is None:
             return match.group(0)
         return '<a href="{}">{}({})</a>'.format(path, name, section)
-    return re.sub(r'<b>' + NAME_RE + '</b>' + SECTION_RE,
+    return re.sub(r'<[bi]>' + NAME_RE + '</[bi]>' + SECTION_RE,
         repl, html)
 
 

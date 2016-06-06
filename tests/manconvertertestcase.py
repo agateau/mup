@@ -14,6 +14,7 @@ MAN_PAGE_DICT = {
     ('foo', '1'): '/man/1/foo.1',
     ('bar', '3'): '/man/3/bar.3',
     ('xbaz', '1x'): '/man/1/xbaz.1',
+    ('italic', '2'): '/man/2/italic.2',
 }
 
 
