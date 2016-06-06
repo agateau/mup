@@ -7,6 +7,10 @@ import sys
 
 CMD = ['groff', '-K', 'utf-8', '-mandoc', '-Thtml']
 
+NAME_RE = r'([-_.a-zA-Z0-9]+)'
+SECTION_RE = r'\((\d+[px]?)\)'
+
+SECTION_LETTER_RX = re.compile(r'[a-z]+$')
 
 # Keys: (name, section) => path
 g_man_page_cache = {}
@@ -17,10 +21,11 @@ def find_man_page(name, section):
     except KeyError:
         pass
 
-    cmd = ['man', '--where', section]
+    num_section = SECTION_LETTER_RX.sub('', section)
+    cmd = ['man', '--where', num_section]
     cmd.append(name)
     try:
-        path = subprocess.check_output(cmd).strip()
+        path = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).strip().decode('utf-8')
     except subprocess.CalledProcessError:
         path = None
     g_man_page_cache[(name, section)] = path
@@ -35,7 +40,7 @@ def process_links(html, find_man_page_fcn):
         if path is None:
             return match.group(0)
         return '<a href="{}">{}({})</a>'.format(path, name, section)
-    return re.sub(r'<b>([-_.a-zA-Z0-9]+)</b>\((\d+)\)',
+    return re.sub(r'<b>' + NAME_RE + '</b>' + SECTION_RE,
         repl, html)
 
 
