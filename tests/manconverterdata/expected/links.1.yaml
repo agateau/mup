@@ -1,0 +1,3 @@
+patterns:
+    - <a href="/man/1/foo.1">foo\(1\)</a>
+    - <a href="/man/3/bar.3">bar\(3\)</a>
