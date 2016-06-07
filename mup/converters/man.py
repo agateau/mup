@@ -15,6 +15,10 @@ SECTION_RE = r'\((\d+[px]?)\)'
 
 SECTION_LETTER_RX = re.compile(r'[a-z]+$')
 
+INSTALLED_LINK = '<a href="{}">{}({})</a>'
+
+NOT_INSTALLED_LINK = '<a style="border-bottom: 1px dotted red; cursor: not-allowed" title="Not installed">{}({})</a>'
+
 # Keys: (name, section) => path
 g_man_page_cache = {}
 def find_man_page(name, section):
@@ -40,9 +44,10 @@ def process_links(html, find_man_page_fcn):
         name = match.group(1)
         section = match.group(2)
         path = find_man_page_fcn(name, section)
-        if path is None:
-            return match.group(0)
-        return '<a href="{}">{}({})</a>'.format(path, name, section)
+        if path:
+            return INSTALLED_LINK.format(path, name, section)
+        else:
+            return NOT_INSTALLED_LINK.format(name, section)
     return re.sub(r'<[bi]>' + NAME_RE + '</[bi]>' + SECTION_RE,
         repl, html)
 
