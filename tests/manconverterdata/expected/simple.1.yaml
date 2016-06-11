@@ -1,0 +1,6 @@
+patterns:
+    - NAME
+    - example\s+-\s+an\s+example
+    - SYNOPSIS
+    - -f
+    - -l

@@ -3,9 +3,11 @@ import os
 import unittest
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.pardir))
 
-from .converterstestcase import *
+from converterstestcase import *
+from manconvertertestcase import *
+from rstconvertertestcase import *
 
 def main():
     unittest.main()
