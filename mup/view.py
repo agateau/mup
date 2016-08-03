@@ -110,7 +110,7 @@ class View(QWidget):
         QDesktopServices.openUrl(url)
 
     def _showHoveredLink(self, link, title, textContent):
-        if link.isEmpty():
+        if not link:
             self._linkLabelHideTimer.start()
             return
 

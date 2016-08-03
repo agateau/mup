@@ -63,7 +63,7 @@ class FindWidget(QWidget):
     def _doFind(self):
         text = self._lineEdit.text()
         found = self._view.find(text)
-        if found or text.isEmpty():
+        if found or not text:
             self._lineEdit.setPalette(self.palette())
         else:
             self._lineEdit.setPalette(self._notFoundPalette)
