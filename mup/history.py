@@ -70,7 +70,7 @@ class History(QObject):
         if self._canGoBack():
             self.backAction.setEnabled(True)
             item = self._lst[self._index - 1]
-            tip = self.tr("Go back to %1").arg(str(item))
+            tip = self.tr("Go back to {}").format(item)
             self.backAction.setToolTip(tip)
         else:
             self.backAction.setEnabled(False)
@@ -78,7 +78,7 @@ class History(QObject):
         if self._canGoForward():
             self.forwardAction.setEnabled(True)
             item = self._lst[self._index + 1]
-            tip = self.tr("Go to %1").arg(str(item))
+            tip = self.tr("Go to {}").format(item)
             self.forwardAction.setToolTip(tip)
         else:
             self.forwardAction.setEnabled(False)
