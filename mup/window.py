@@ -132,6 +132,7 @@ class Window(QMainWindow):
 
         self.view = View()
         self.view.loadRequested.connect(self.load)
+        self.view.reloadRequested.connect(self.reload)
         self.view.internalUrlClicked.connect(self.handleInternalUrl)
 
         self._findWidget = FindWidget(self.view)

@@ -12,6 +12,7 @@ from .converterthread import ConverterThread
 class View(QWidget):
     internalUrlClicked = pyqtSignal(QUrl)
     loadRequested = pyqtSignal(str)
+    reloadRequested = pyqtSignal()
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
@@ -30,6 +31,9 @@ class View(QWidget):
 
     def _setupView(self):
         self._view = QWebView(self)
+        self._view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._view.customContextMenuRequested.connect(
+            self._onCustomContextMenuRequested)
         page = QWebPage()
         page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         page.linkClicked.connect(self._openUrl)
@@ -52,6 +56,17 @@ class View(QWidget):
         self._linkLabelHideTimer.setSingleShot(True)
         self._linkLabelHideTimer.setInterval(250)
         self._linkLabelHideTimer.timeout.connect(self._linkLabel.hide)
+
+    def _onCustomContextMenuRequested(self, ev):
+        menu = QMenu(self)
+
+        menu.addAction(self._view.pageAction(QWebPage.Copy))
+
+        action = menu.addAction(
+            QCoreApplication.translate("Window", "Force Reload"))
+        action.triggered.connect(self.reloadRequested)
+
+        menu.exec(self.mapToGlobal(ev))
 
     def load(self, filename, converter, lastScrollPos=None):
         self._lastScrollPos = lastScrollPos
