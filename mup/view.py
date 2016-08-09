@@ -30,6 +30,7 @@ class View(QWidget):
 
     def _setupView(self):
         self._view = QWebView(self)
+        self._view.contextMenuEvent = lambda e : None
         page = QWebPage()
         page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         page.linkClicked.connect(self._openUrl)
