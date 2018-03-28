@@ -28,6 +28,7 @@ It also supports the following formats using external converters:
 - Ronn
 - Man pages
 - Asciidoc
+- Mediawiki
 
 External converters are command line tools which are invoked by MUP to convert
 input files. To be used as an external converter, the tool must accept markup
@@ -98,6 +99,10 @@ For Ronn you need to install [Ronn][].
 ### Asciidoc
 
 For Asciidoc you need to install [Asciidoc][].
+
+### Mediawiki
+
+For Mediawiki you need to install [Pandoc][].
 
 [python-markdown]: https://pythonhosted.org/Markdown/
 [Pandoc]: http://pandoc.org
