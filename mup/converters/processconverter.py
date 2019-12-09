@@ -25,6 +25,7 @@ class ProcessConverter(Converter):
 
         obj = ProcessConverter()
         obj.name = dct['name']
+        obj.format = dct['format']
         obj.reference = dct.get('reference', False)
         obj.online = dct.get('online', False)
         obj._matches = dct['matches']

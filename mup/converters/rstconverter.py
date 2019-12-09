@@ -6,7 +6,8 @@ from .converter import Converter
 
 
 class RstConverter(Converter):
-    name = "RST"
+    name = "reStructuredText"
+    format = "rst"
     reference = True
 
     def _doConvert(self, txt):

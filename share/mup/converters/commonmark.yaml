@@ -1,3 +1,4 @@
 name: CommonMark
+format: markdown
 cmd: stmd
 matches: ["*.md", "*.mkd", "*.markdown", "README"]

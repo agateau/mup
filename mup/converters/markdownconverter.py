@@ -8,6 +8,7 @@ from .utils import applyTemplate
 
 class MarkdownConverter(Converter):
     name = "python-markdown"
+    converterId = "md-python"
 
     def _doConvert(self, txt):
         html = markdown.markdown(txt)

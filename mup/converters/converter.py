@@ -6,6 +6,8 @@ from mup.converters.utils import readFile, skipHeader
 
 class Converter(object):
     name = 'Unnamed'
+    # File format
+    format = 'unset'
     # Set to True if this converter wraps the reference implementation for the
     # markup it supports
     reference = False

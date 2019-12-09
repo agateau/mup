@@ -1,4 +1,5 @@
 name: Mediawiki
+format: mediawiki
 cmd: pandoc
 args: --from mediawiki
 matches: ["*.wiki", "*.mediawiki", "*.mw"]

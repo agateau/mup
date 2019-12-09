@@ -1,4 +1,5 @@
 name: Ronn
+format: ronn
 cmd: ronn
 args: --pipe --fragment
 matches: ["*.ronn"]

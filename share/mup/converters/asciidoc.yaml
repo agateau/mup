@@ -1,4 +1,5 @@
 name: Asciidoc
+format: asciidoc
 cmd: asciidoc
 args: --out-file - -
 full: true

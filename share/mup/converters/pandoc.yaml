@@ -1,3 +1,4 @@
 name: Pandoc
+format: markdown
 cmd: pandoc
 matches: ["*.md", "*.mkd", "*.markdown", "README"]

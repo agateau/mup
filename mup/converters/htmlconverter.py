@@ -8,6 +8,7 @@ class HtmlConverter(Converter):
     A dumb converter which just passes content unaltered
     """
     name = "Straight HTML"
+    format = "html"
 
     def _doConvert(self, src):
         return src

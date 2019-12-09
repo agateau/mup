@@ -1,4 +1,5 @@
 name: GitHub Markdown (via github.com)
+format: markdown
 cmd: mup-gh-markdown
 matches: ["*.md", "*.mkd", "*.markdown", "README"]
 online: true

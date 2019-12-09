@@ -1,4 +1,5 @@
 name: GitHub Flavored Markdown (via github.com)
+format: markdown
 cmd: mup-gh-markdown
 args: --mode gfm
 matches: ["*.md", "*.mkd", "*.markdown", "README"]

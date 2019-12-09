@@ -1,3 +1,4 @@
 name: Gruber Markdown
+format: markdown
 cmd: markdown
 matches: ["*.md", "*.mkd", "*.markdown", "README"]

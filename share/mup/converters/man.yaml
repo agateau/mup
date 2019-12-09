@@ -1,4 +1,5 @@
 name: Man
+format: man
 cmd: mup-man
 args:
 full: true
