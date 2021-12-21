@@ -1,8 +1,8 @@
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtWebKit import *
+from PyQt5.QtWebEngine import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtWebKitWidgets import *
+from PyQt5.QtWebEngineWidgets import *
 
 from . import converters
 
@@ -29,10 +29,11 @@ class View(QWidget):
         self._lastScrollPos = None
 
     def _setupView(self):
-        self._view = QWebView(self)
-        page = QWebPage()
-        page.setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
-        page.linkClicked.connect(self._openUrl)
+        self._view = QWebEngineView(self)
+        page = QWebEnginePage()
+        # PORTME
+        # page.setLinkDelegationPolicy(QWebEnginePage.DelegateAllLinks)
+        # page.linkClicked.connect(self._openUrl)
         page.linkHovered.connect(self._showHoveredLink)
         self._view.setPage(page)
         self._view.loadFinished.connect(self._onLoadFinished)
@@ -63,23 +64,28 @@ class View(QWidget):
         self._thread.reload()
 
     def find(self, text, backward=False):
-        options = QWebPage.FindWrapsAroundDocument
+        options = QWebEnginePage.FindFlags()
         if backward:
-            options |= QWebPage.FindBackward
+            options |= QWebEnginePage.FindBackward
         found = self._view.findText(text, options)
 
         # Redo highlight
-        options = QWebPage.HighlightAllOccurrences
-        self._view.findText("", options)
-        self._view.findText(text, options)
+        # PORTME
+        # options = QWebEnginePage.HighlightAllOccurrences
+        # self._view.findText("", options)
+        # self._view.findText(text, options)
         return found
 
     def removeFindHighlights(self):
-        options = QWebPage.HighlightAllOccurrences
-        self._view.findText("", options)
+        # PORTME
+        # options = QWebEnginePage.HighlightAllOccurrences
+        # self._view.findText("", options)
+        pass
 
     def scrollPosition(self):
-        return self._view.page().currentFrame().scrollPosition()
+        # PORTME
+        # return self._view.page().currentFrame().scrollPosition()
+        return 0
 
     def _setHtml(self, html):
         filename = str(self._thread.filename())
@@ -88,8 +94,9 @@ class View(QWidget):
 
     def _onLoadFinished(self):
         if self._lastScrollPos is not None:
-            frame = self._view.page().currentFrame()
-            frame.setScrollPosition(self._lastScrollPos)
+            frame = self._view.page()
+            # PORTME
+            # frame.setScrollPosition(self._lastScrollPos)
             self._lastScrollPos = None
 
     def _openUrl(self, url):

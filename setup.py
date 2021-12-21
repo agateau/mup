@@ -24,7 +24,12 @@ setup(name=mup.__appname__,
     license=mup.__license__,
     platforms=["any"],
     url="http://github.com/agateau/mup",
-    install_requires=["pyxdg"],
+    install_requires=[
+        "pyxdg",
+        "pyyaml",
+        "pyqt5",
+        "pyqtwebengine",
+    ],
     packages=["mup", "mup.converters"],
     package_data={
         "mup": ["data/*.html"],
